@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SendGrid_Log.Models;
+using StrongGrid;
+
 
 namespace SendGrid_Log.Controllers
 {
@@ -42,29 +44,34 @@ namespace SendGrid_Log.Controllers
             return View(emailEvent);
         }
 
-        // GET: EmailEvents/Create
-        public IActionResult Create()
+        // GET: Home/LogEvent
+        public IActionResult LogEvent()
         {
+            
             return View();
         }
 
-        // POST: EmailEvents/Create
+        // POST: Home/LogEvent
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Response,Status,EventID,MessageID,EventType,EmailAddress,Timestamp,SmtpID,UniqueArgKey,Categories,Newsletter,ASMGroupID,Reason,Type,IP,TLS,Cert_Err,UserAgent,URL,URLOffset,Attempt,MarketingCampaignID,MarketingCampaignName,MarketingCampaignVersion,MarketingCampaignSplitID,PostType")] EmailEvent emailEvent)
+        public IActionResult LogEvent(EmailEvent emailEvent)
         {
+
             if (ModelState.IsValid)
             {
+                var parser = new WebhookParser();
+                var events = parser.ParseWebhookEvents(Request.Body.ToString());
+
                 _context.Add(emailEvent);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                _context.SaveChangesAsync();
+                return Ok();
             }
-            return View(emailEvent);
+            return Ok();
         }
 
-        // GET: EmailEvents/Edit/5
+        // GET: Home/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,7 +87,7 @@ namespace SendGrid_Log.Controllers
             return View(emailEvent);
         }
 
-        // POST: EmailEvents/Edit/5
+        // POST: Home/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -115,7 +122,7 @@ namespace SendGrid_Log.Controllers
             return View(emailEvent);
         }
 
-        // GET: EmailEvents/Delete/5
+        // GET: Home/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,7 +140,7 @@ namespace SendGrid_Log.Controllers
             return View(emailEvent);
         }
 
-        // POST: EmailEvents/Delete/5
+        // POST: Home/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
