@@ -1,0 +1,179 @@
+@model SendGrid_Log.Models.EmailEvent
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>EmailEvent</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <input type="hidden" asp-for="ID" />
+        <dt>
+            @Html.DisplayNameFor(model => model.Response)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Response)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EventID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EventID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MessageID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MessageID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EventType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EventType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EmailAddress)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EmailAddress)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Timestamp)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Timestamp)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SmtpID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SmtpID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.UniqueArgKey)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UniqueArgKey)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Categories)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Categories)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Newsletter)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Newsletter)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ASMGroupID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ASMGroupID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Reason)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Reason)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IP)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IP)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TLS)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TLS)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Cert_Err)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Cert_Err)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.UserAgent)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UserAgent)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.URL)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.URL)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.URLOffset)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.URLOffset)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Attempt)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Attempt)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MarketingCampaignID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MarketingCampaignID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MarketingCampaignName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MarketingCampaignName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MarketingCampaignVersion)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MarketingCampaignVersion)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MarketingCampaignSplitID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MarketingCampaignSplitID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PostType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PostType)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </form>
+</div>
