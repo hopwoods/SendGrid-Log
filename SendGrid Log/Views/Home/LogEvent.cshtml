@@ -3,13 +3,45 @@
 @{
     ViewData["Title"] = "Create";
 }
+<script type="text/javascript">
+    $(document).ready(function () {
+    $("button#SendEvent").click(function () {
+        console.log("Send Event Clicked");
 
+        //JSON data
+        var dataType = 'application/json; charset=utf-8';
+        var data =
+            {
+                FirstName: 'Andrew',
+                LastName: 'Lock',
+                Age: 31
+            };
+            
+        
+        console.log(data);
+
+        console.log('Submitting form...');
+        $.ajax({
+            type: 'POST',
+            url: 'LogEvent',
+            dataType: 'json',
+            contentType: dataType,
+            data: data,
+            success: function (result) {
+                console.log('Data received: ');
+                console.log(result);
+            }
+        });
+       
+    });
+
+});
+</script>
 <h2>Create</h2>
 
-<form asp-action="LogEvent">
-    
-</form>
+<button id="SendEvent">Send Event</button>
 
+<p>Result: @ViewBag.Events</p>
 <div>
     <a asp-action="Index">Back to List</a>
 </div>

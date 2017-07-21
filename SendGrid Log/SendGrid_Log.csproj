@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="wwwroot\favicon.ico" />
     <Content Include="wwwroot\images\ITS-logo-Landscape-web-MONO.jpg" />
     <Content Include="wwwroot\images\ITS-logo-Landscape-web-RGB-WO.png" />
   </ItemGroup>
