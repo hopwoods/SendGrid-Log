@@ -24,6 +24,7 @@ namespace SendGrid_Log.Migrations
                     eventTimestamp = table.Column<DateTime>(nullable: false),
                     ip = table.Column<string>(nullable: true),
                     reason = table.Column<string>(nullable: true),
+                    response = table.Column<string>(nullable: true),
                     sg_event_id = table.Column<string>(nullable: true),
                     sg_message_id = table.Column<string>(nullable: true),
                     tls = table.Column<string>(nullable: true),

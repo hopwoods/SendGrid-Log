@@ -39,6 +39,8 @@ namespace SendGrid_Log.Migrations
 
                     b.Property<string>("reason");
 
+                    b.Property<string>("response");
+
                     b.Property<string>("sg_event_id");
 
                     b.Property<string>("sg_message_id");

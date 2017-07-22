@@ -8,7 +8,7 @@ using SendGrid_Log.Models;
 namespace SendGrid_Log.Migrations
 {
     [DbContext(typeof(SendGrid_LogContext))]
-    [Migration("20170722163054_Events")]
+    [Migration("20170722183439_Events")]
     partial class Events
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,6 +39,8 @@ namespace SendGrid_Log.Migrations
                     b.Property<string>("ip");
 
                     b.Property<string>("reason");
+
+                    b.Property<string>("response");
 
                     b.Property<string>("sg_event_id");
 

@@ -23,7 +23,6 @@ namespace SendGrid_Log.Models
         [NotMapped]
         public int timestamp { get; set; }
 
-
         private DateTime _eventTimestamp = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
 
         [Display(Name = "Date & Time")]
@@ -86,6 +85,9 @@ namespace SendGrid_Log.Models
 
         [Display(Name = "Reason")]
         public string reason { get; set; }
+
+        [Display(Name = "Response")]
+        public string response { get; set; }
 
         [Display(Name = "Type")]
         public string type { get; set; }
