@@ -1,4 +1,4 @@
-@model SendGrid_Log.Models.EmailEvent
+@model List<SendGrid_Log.Models.EmailEvent>
 
 @{
     ViewData["Title"] = "Create";
@@ -7,32 +7,50 @@
     $(document).ready(function () {
     $("button#SendEvent").click(function () {
         console.log("Send Event Clicked");
-
         //JSON data
-        var dataType = 'application/json; charset=utf-8';
         var data =
             {
-                FirstName: 'Andrew',
-                LastName: 'Lock',
-                Age: 31
+                "response": "250 OK",
+                "sg_event_id": "sendgrid_internal_event_id",
+                "sg_message_id": "sendgrid_internal_message_id",
+                "event": "delivered",
+                "email": "email@example.com",
+                "timestamp": 1500747680,
+                "smtp-id": "<original-smtp-id@domain.com>",
+                "unique_arg_key": "unique_arg_value",                
+                "asm_group_id": 1,
+                "ip": "127.0.0.1",
+                "tls": "1",
+                "newsletter": {
+                    "newsletter_user_list_id": "10557865",
+                    "newsletter_id": "1943530",
+                    "newsletter_send_id": "2308608"
+                },
+                "cert_err": "1"
             };
-            
-        
-        console.log(data);
-
+        //console.log(data);
         console.log('Submitting form...');
         $.ajax({
-            type: 'POST',
-            url: 'LogEvent',
-            dataType: 'json',
-            contentType: dataType,
-            data: data,
+            url: "LogEvent",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(data),
             success: function (result) {
-                console.log('Data received: ');
                 console.log(result);
+                if (result == 1) {
+                    window.location.replace("@Url.Action("Index", "Home")");
+                } else {
+                    $("Result").text(result);
+                }
+            },
+            error: function (xhRequest, ErrorText, thrownError) {
+                alert("Failed to process events");
+                console.log('xhRequest: ' + xhRequest + "\n");
+                console.log('ErrorText: ' + ErrorText + "\n");
+                console.log('thrownError: ' + thrownError + "\n");
             }
         });
-       
+
     });
 
 });
@@ -41,9 +59,11 @@
 
 <button id="SendEvent">Send Event</button>
 
-<p>Result: @ViewBag.Events</p>
+<div id="Result">
+
+</div>
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a href="@Url.Action("Index","Home")">Back to List</a>
 </div>
 
 @section Scripts {

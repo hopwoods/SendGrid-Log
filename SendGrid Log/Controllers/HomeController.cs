@@ -1,12 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SendGrid_Log.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using SendGrid_Log.Models;
-using StrongGrid;
 
 
 namespace SendGrid_Log.Controllers
@@ -21,48 +18,38 @@ namespace SendGrid_Log.Controllers
         }
 
         // GET: EmailEvents
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.EmailEvent.ToListAsync());
+            return View(_context.EmailEvent.ToList());
         }
 
-        // GET: EmailEvents/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var emailEvent = await _context.EmailEvent
-                .SingleOrDefaultAsync(m => m.ID == id);
-            if (emailEvent == null)
-            {
-                return NotFound();
-            }
-
-            return View(emailEvent);
-        }
+        
 
         // GET: Home/LogEvent
-        //public IActionResult LogEvent()
-        //{
-        //    return View();
-        //}
+        public IActionResult LogEvent()
+        {
+            return View();
+        }
 
         // POST: Home/LogEvent
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpGet]
-        public JsonResult LogEvent(Person person)
-        {
-            //var parser = new WebhookParser();
-            //var events = await parser.ParseWebhookEventsAsync(Request.Body).ConfigureAwait(false);
+        [HttpPost]
+        public IActionResult LogEvent([FromBody][Bind("ID,sg_event_id,sg_message_id,email,@event,url,asm_group_id,ip,tls,cert_err,useragent,userid,reason,type,attempt,send_at")] EmailEvent jsonData)
+        {            
+            int status = 0;
+            //var EventData = Request.QueryString.ToString();
+            if (ModelState.IsValid)
+            {
+                    _context.Add(jsonData);
+                    _context.SaveChanges();
+                    status = 1;                    
 
-            return Json(person);
-
-
-
+                return Ok(status);
+            } else
+            {
+                return Ok(status);
+            }
         }
 
         // GET: Home/Delete/5

@@ -24,32 +24,56 @@ textarea {
     background-color: #092266;
     border-color: #092266;
 }
+
     .navbar-inverse .navbar-nav > li > a {
         color: #ffffff;
     }
+
         .navbar-inverse .navbar-nav > li > a:hover {
             color: #b3ffff;
-        } 
-        
-        
-        a.navbar-brand {
-            width: 125px;
-            margin-left: 2em;
-            display: inline-block;
-            padding-left: 0;
-            padding-right: 0;
         }
-a.navbar-brand > img {
+
+
+a.navbar-brand {
     width: 125px;
-    position: relative;
-    top: -0.4em;
+    margin-left: 2em;
+    display: inline-block;
+    padding-left: 0;
+    padding-right: 0;
 }
+
+    a.navbar-brand > img {
+        width: 125px;
+        position: relative;
+        top: -0.4em;
+    }
 
 /* Typography */
 
-h1,h2,h3,h4,h5,h6 {
+h1, h2, h3, h4, h5, h6 {
     color: #092266;
 }
+
+/* Tables */
+table.table {
+    font-size: 0.8em;
+}
+
+    table.table th {
+        text-transform: capitalize;
+        font-size: 1.1em;
+        color: #555;
+    }
+
+    table.table .email-info {
+        text-align: center;
+    }
+
+        table.table .email-info span {
+            font-size: 1.5em;
+            color: #0263c4;
+        }
+
 
 
 /* Footer */
@@ -58,5 +82,4 @@ footer {
 }
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
-    
 }

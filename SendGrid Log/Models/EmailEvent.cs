@@ -1,53 +1,109 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SendGrid_Log.Models
 {
     public class EmailEvent
     {
+        [HiddenInput(DisplayValue = false)]
         public int ID { get; set; }
-        public string Response { get; set; }
-        public string Status { get; set; }
-        [Display(Name = "Event ID")]
-        public string EventID { get; set; }
-        [Display(Name = "Message Date")]
-        public string MessageID { get; set; }
-        [Display(Name = "Type")]
-        public string EventType { get; set; }
-        [Display(Name = "Recipient Address")]
-        public string EmailAddress { get; set; }
-        [Display(Name = "Event Date")]
-        [DataType(DataType.Date)]
-        public DateTime Timestamp { get; set; }
-        [Display(Name = "SMTP ID")]
-        public string SmtpID { get; set; }
-        [Display(Name = "Unique Argument Key")]
-        public string UniqueArgKey { get; set; }
-        public string Categories { get; set; }
-        public string Newsletter { get; set; }
+
+        [Display(Name = "SendGrid Event ID")]
+        public string sg_event_id { get; set; }
+
+        [Display(Name = "SendGrid Message ID")]
+        public string sg_message_id { get; set; }
+
+        [Display(Name = "Email Address")]
+        [DataType(DataType.EmailAddress)]
+        public string email { get; set; }
+        
+        [NotMapped]
+        public int timestamp { get; set; }
+
+
+        private DateTime _eventTimestamp = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+
+        [Display(Name = "Date & Time")]
+        [DataType(DataType.DateTime)]
+        public DateTime eventTimestamp
+        {
+            get {
+                if (_eventTimestamp == Convert.ToDateTime("01/01/1970 00:00:00"))
+                {
+                    _eventTimestamp = _eventTimestamp.AddSeconds(timestamp).ToLocalTime();
+                    return _eventTimestamp;
+                }
+                else
+                {
+                    return _eventTimestamp; 
+                }
+            }
+            set
+            {
+                if (_eventTimestamp == Convert.ToDateTime("01/01/0001 00:00:00"))
+                {
+                    _eventTimestamp = _eventTimestamp.AddSeconds(timestamp).ToLocalTime();
+                }
+                else {
+                    _eventTimestamp = value;
+                }
+            }
+        }
+
+        [Display(Name = "Event Type")]
+        public string @event { get; set; }
+
+        //[Display(Name = "Category")]
+        //public string category { get; set; }
+
         [Display(Name = "ASM Group ID")]
-        public string ASMGroupID { get; set; }
-        public string Reason { get; set; }
-        public string Type { get; set; }
+        public int asm_group_id { get; set; }
+
+        [Display(Name = "URL")]
+        [DataType(DataType.Url)]
+        public string url { get; set; }
+
+        //[Display(Name = "Unique Argument Key")]
+        //public string unique_arg_key { get; set; }
+
         [Display(Name = "IP Address")]
-        public string IP { get; set; }
-        public string TLS { get; set; }
-        [Display(Name = "Certificate Error")]
-        public string Cert_Err { get; set; }
+        public string ip { get; set; }
+
+        [Display(Name = "TLS Version")]
+        public string tls { get; set; }
+
+        [Display(Name = "Cert Error")]
+        public string cert_err { get; set; }
+
         [Display(Name = "User Agent")]
-        public string UserAgent { get; set; }
-        public string URL { get; set; }
-        public string URLOffset { get; set; }
-        public string Attempt { get; set; }
-        [Display(Name = "Marketing Campaign ID")]
-        public string MarketingCampaignID { get; set; }
-        [Display(Name = "Marketing Campaign Name")]
-        public string MarketingCampaignName { get; set; }
-        [Display(Name = "Marketing Campaign Version")]
-        public string MarketingCampaignVersion { get; set; }
-        [Display(Name = "Marketing Campaign Split ID")]
-        public string MarketingCampaignSplitID { get; set; }
-        [Display(Name = "Post Type")]
-        public string PostType { get; set; }
+        public string useragent { get; set; }
+
+        [Display(Name = "User ID")]
+        public string userid { get; set; }
+
+        [Display(Name = "Reason")]
+        public string reason { get; set; }
+
+        [Display(Name = "Type")]
+        public string type { get; set; }
+
+        [Display(Name = "Attempt")]
+        public string attempt { get; set; }
+
+        [Display(Name = "Sent At")]
+        public string Send_at { get; set; }
+
+        //[Display(Name = "Template")]
+        //public string template { get; set; }
+
+        //[Display(Name = "Newsletter")]
+        //public string newsletter { get; set; }
+
+        //[Display(Name = "URL Offset")]
+        //public string url_offset { get; set; }
+
     }
 }

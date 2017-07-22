@@ -8,9 +8,10 @@ using SendGrid_Log.Models;
 namespace SendGrid_Log.Migrations
 {
     [DbContext(typeof(SendGrid_LogContext))]
-    partial class SendGrid_LogContextModelSnapshot : ModelSnapshot
+    [Migration("20170722163054_Events")]
+    partial class Events
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")

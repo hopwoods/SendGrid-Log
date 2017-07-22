@@ -4,30 +4,21 @@
 }
 
 <h2>ITS SendGrid Email Log</h2>
-<a href="home/logevent">Post Event</a>
+<a href="@Url.Action("LogEvent","Home")">Post Event</a>
 <br />
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.EventID)
+                @Html.DisplayNameFor(model => model.eventTimestamp)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EventType)
+                @Html.DisplayNameFor(model => model.@event)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Response)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
+                @Html.DisplayNameFor(model => model.email)
             </th>            
-            <th>
-                @Html.DisplayNameFor(model => model.EmailAddress)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Timestamp)
-            </th>
-            <th>
+            <th class="email-info">
                 Info
             </th>
         </tr>
@@ -37,25 +28,16 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.EventID)
+                    @Html.DisplayFor(modelItem => item.eventTimestamp)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.EventType)
+                    @Html.DisplayFor(modelItem => item.@event)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Response)
+                    @Html.DisplayFor(modelItem => item.email)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                 <td>
-                    @Html.DisplayFor(modelItem => item.EmailAddress)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Timestamp)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.ID"><span class="fa fa-info-circle"</a>
+                <td class="email-info">
+                    <span class="fa fa-info-circle"></span>
                 </td>
             </tr>
         }
