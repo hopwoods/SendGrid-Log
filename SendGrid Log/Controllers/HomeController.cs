@@ -35,18 +35,25 @@ namespace SendGrid_Log.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public IActionResult LogEvent([FromBody][Bind("ID,sg_event_id,sg_message_id,email,@event,url,asm_group_id,ip,tls,cert_err,useragent,userid,reason,type,attempt,send_at")] EmailEvent jsonData)
+        public IActionResult LogEvent([FromBody]
+        [Bind("ID,sg_event_id,sg_message_id,email,@event,url,asm_group_id,ip,tls,cert_err,useragent,userid,reason,type,attempt,send_at")]
+        List<EmailEvent> jsonData)
         {            
             int status = 0;
-            //var EventData = Request.QueryString.ToString();
-            if (ModelState.IsValid)
+            if(jsonData.Count != 0)
             {
-                    _context.Add(jsonData);
+                if (ModelState.IsValid)
+                {
+                    foreach (var emailEvent in jsonData)
+                    {
+                        _context.Add(emailEvent);
+                    }
                     _context.SaveChanges();
                     status = 1;                    
-
+                }
                 return Ok(status);
-            } else
+            }           
+             else
             {
                 return Ok(status);
             }

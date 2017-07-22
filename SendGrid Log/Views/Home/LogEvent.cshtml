@@ -9,7 +9,8 @@
         console.log("Send Event Clicked");
         //JSON data
         var data =
-            {
+            [
+                {
                 "sg_event_id": "sendgrid_internal_event_id",
                 "sg_message_id": "sendgrid_internal_message_id",
                 "email": "email@example.com",
@@ -25,7 +26,175 @@
                 },
                 "asm_group_id": 1,
                 "send_at": 1249949000
-            };
+            },
+                {
+                    "sg_event_id": "sendgrid_internal_event_id",
+                    "sg_message_id": "sendgrid_internal_message_id",
+                    "email": "email@example.com",
+                    "timestamp": 1249948800,
+                    "unique_arg_key": "unique_arg_value",
+                    "category": ["category1", "category2"],
+                    "event": "spamreport",
+                    "asm_group_id": 1
+                },
+                {
+                    "sg_message_id": "sendgrid_internal_message_id",
+                    "email": "email@example.com",
+                    "timestamp": 1249948800,
+                    "unique_arg_key": "unique_arg_value",
+                    "category": ["category1", "category2"],
+                    "event": "unsubscribe",
+                    "asm_group_id": 1
+                },
+                {
+                    "sg_message_id": "sendgrid_internal_message_id",
+                    "email": "email@example.com",
+                    "timestamp": 1249948800,
+                    "unique_arg_key": "unique_arg_value",
+                    "category": ["category1", "category2"],
+                    "event": "group_unsubscribe",
+                    "asm_group_id": 1,
+                    "useragent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36",
+                    "ip": "255.255.255.255"
+                },
+                {
+                    "sg_message_id": "sendgrid_internal_message_id",
+                    "email": "email@example.com",
+                    "timestamp": 1249948800,
+                    "unique_arg_key": "unique_arg_value",
+                    "category": ["category1", "category2"],
+                    "event": "group_resubscribe",
+                    "asm_group_id": 1,
+                    "useragent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36",
+                    "ip": "255.255.255.255"
+                },
+                {
+                    "category": [],
+                    "email": "email@example.com",
+                    "event": "processed",
+                    "marketing_campaign_id": 12345,
+                    "marketing_campaign_name": "campaign name",
+                    "post_type": "event",
+                    "sg_event_id": "sendgrid_internal_event_id",
+                    "sg_message_id": "sendgrid_internal_message_id",
+                    "sg_user_id": 12345,
+                    "smtp-id": "",
+                    "timestamp": 1442349428
+                },
+                {
+                    "category": [],
+                    "email": "tadpole_0010@stbase-018.sjc1.sendgrid.net",
+                    "event": "processed",
+                    "marketing_campaign_id": 23314,
+                    "marketing_campaign_name": "unique args ab",
+                    "marketing_campaign_version": "B",
+                    "marketing_campaign_split_id": 13471,
+                    "post_type": "event",
+                    "sg_event_id": "qNOzbkTuTNCdxa1eXEpnXg",
+                    "sg_message_id": "5lFl7Fr1Rjme_EyzNNB_5A.stfilter-015.5185.55F883172.0",
+                    "sg_user_id": 939115,
+                    "smtp-id": "<5lFl7Fr1Rjme_EyzNNB_5A@stismtpd-006.sjc1.sendgrid.net>",
+                    "timestamp": 1442349848
+                },
+                {
+                    "category": [],
+                    "email": "tadpole_0001@stbase-018.sjc1.sendgrid.net",
+                    "event": "delivered",
+                    "marketing_campaign_id": 23314,
+                    "marketing_campaign_name": "unique args ab",
+                    "post_type": "event",
+                    "response": "250 Ok ",
+                    "sg_event_id": "X2M1IUfMRhuAhWM0CbmFqQ",
+                    "sg_message_id": "fPJrJPIRTxC_obpgfTy74w.stfilter-015.5185.55F883564.0",
+                    "sg_user_id": 12345,
+                    "smtp-id": "",
+                    "timestamp": 1442349911
+                },
+                {
+                    "response": "250 OK",
+                    "sg_event_id": "sendgrid_internal_event_id",
+                    "sg_message_id": "sendgrid_internal_message_id",
+                    "event": "delivered",
+                    "email": "email@example.com",
+                    "timestamp": 1249948800,
+                    "smtp-id": "<original-smtp-id@domain.com>",
+                    "unique_arg_key": "unique_arg_value",
+                    "category": ["category1", "category2"],
+                    "newsletter": {
+                        "newsletter_user_list_id": "10557865",
+                        "newsletter_id": "1943530",
+                        "newsletter_send_id": "2308608"
+                    },
+                    "asm_group_id": 1,
+                    "ip": "127.0.0.1",
+                    "tls": "1",
+                    "cert_err": "1"
+                },
+                {
+                    "response": "400 Try again",
+                    "sg_event_id": "sendgrid_internal_event_id",
+                    "sg_message_id": "sendgrid_internal_message_id",
+                    "event": "deferred",
+                    "email": "email@example.com",
+                    "timestamp": 1249948800,
+                    "smtp-id": "<original-smtp-id@domain.com>",
+                    "unique_arg_key": "unique_arg_value",
+                    "category": ["category1", "category2"],
+                    "attempt": "10",
+                    "newsletter": {
+                        "newsletter_user_list_id": "10557865",
+                        "newsletter_id": "1943530",
+                        "newsletter_send_id": "2308608"
+                    },
+                    "asm_group_id": 1,
+                    "ip": "127.0.0.1",
+                    "tls": "0",
+                    "cert_err": "0"
+                },
+                {
+                    "sg_event_id": "sendgrid_internal_event_id",
+                    "sg_message_id": "sendgrid_internal_message_id",
+                    "ip": "255.255.255.255",
+                    "useragent": "Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_2 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Version/7.0 Mobile/11D257 Safari/9537.53",
+                    "event": "click",
+                    "email": "email@example.com",
+                    "timestamp": 1249948800,
+                    "url": "http://yourdomain.com/blog/news.html",
+                    "url_offset": {
+                        "index": 0,
+                        "type": "html"
+                    },
+                    "unique_arg_key": "unique_arg_value",
+                    "category": ["category1", "category2"],
+                    "newsletter": {
+                        "newsletter_user_list_id": "10557865",
+                        "newsletter_id": "1943530",
+                        "newsletter_send_id": "2308608"
+                    },
+                    "asm_group_id": 1
+                },
+                {
+                    "status": "5.0.0",
+                    "sg_event_id": "sendgrid_internal_event_id",
+                    "sg_message_id": "sendgrid_internal_message_id",
+                    "event": "bounce",
+                    "email": "email@example.com",
+                    "timestamp": 1249948800,
+                    "smtp-id": "<original-smtp-id@domain.com>",
+                    "unique_arg_key": "unique_arg_value",
+                    "category": ["category1", "category2"],
+                    "newsletter": {
+                        "newsletter_user_list_id": "10557865",
+                        "newsletter_id": "1943530",
+                        "newsletter_send_id": "2308608"
+                    },
+                    "asm_group_id": 1,
+                    "reason": "500 No Such User",
+                    "type": "bounce",
+                    "ip": "127.0.0.1",
+                    "tls": "1",
+                    "cert_err": "0"
+                }];
         //console.log(data);
         console.log('Submitting form...');
         $.ajax({
