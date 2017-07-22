@@ -95,8 +95,42 @@ namespace SendGrid_Log.Models
         [Display(Name = "Attempt")]
         public string attempt { get; set; }
 
+        
+       
+
+        [NotMapped]
+        public int send_at { get; set; }
+
+        private DateTime _send_at = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+
         [Display(Name = "Sent At")]
-        public string Send_at { get; set; }
+        [DataType(DataType.DateTime)]
+        public DateTime eventSend_at
+        {
+            get
+            {
+                if (_send_at == Convert.ToDateTime("01/01/1970 00:00:00"))
+                {
+                    _send_at = _send_at.AddSeconds(timestamp).ToLocalTime();
+                    return _send_at;
+                }
+                else
+                {
+                    return _send_at;
+                }
+            }
+            set
+            {
+                if (_send_at == Convert.ToDateTime("01/01/0001 00:00:00"))
+                {
+                    _send_at = _send_at.AddSeconds(timestamp).ToLocalTime();
+                }
+                else
+                {
+                    _send_at = value;
+                }
+            }
+        }
 
         //[Display(Name = "Template")]
         //public string template { get; set; }
