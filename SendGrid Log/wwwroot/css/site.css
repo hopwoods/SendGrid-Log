@@ -53,18 +53,23 @@ a.navbar-brand {
 h1, h2, h3, h4, h5, h6 {
     color: #092266;
 }
+
 h1 {
     font-size: 2em;
 }
+
 h2 {
     font-size: 1.8em !important;
 }
+
 h3 {
     font-size: 1.6em;
 }
+
 h4 {
     font-size: 1.4em;
 }
+
 h5 {
     font-size: 1.2em;
 }
@@ -73,35 +78,116 @@ h5 {
 table.table {
     font-size: 0.8em;
 }
+
     table.table thead tr {
         background-color: #666 !important;
     }
+
     table.table thead th {
         text-transform: capitalize;
         font-size: 1.1em;
         color: #ffffff;
     }
-table.table tr:nth-of-type(odd) {
+
+    table.table tr:nth-of-type(odd) {
         background-color: #dedede;
     }
+
     table.table tr:hover {
         background-color: #feee98;
     }
+
     table.table td, table.table tr {
         border: 0 !important;
-    } 
+    }
+
     table.table .email-info {
         text-align: center;
     }
+
         table.table .email-info span {
             font-size: 1.5em;
             color: #0263c4;
         }
 
+/* Search Form */
+#adv-search {
+    width: 300px;
+    display: inline-flex;
+}
+.dropdown.dropdown-lg .dropdown-menu {
+    margin-top: -1px;
+    padding: 6px 20px;
+}
+.input-group-btn .btn-group {
+    display: flex !important;
+}
+.btn-group .btn {
+    border-radius: 0;
+    margin-left: -1px;
+}
+    .btn-group .btn:last-child {
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+.btn-group .form-horizontal .btn[type="submit"] {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.form-horizontal .form-group {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.form-group .form-control:last-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+button.dropdown-toggle {
+    margin-left: 0 !important;
+    padding: 6px 12px;
+    display: inline-block;
+    height: 34px;
+}
+
+#searchmenu {
+    width: 351px;
+    position: absolute;
+    left: -278px;
+    padding: 5px;
+}
+
+    #searchmenu label, #searchmenu select, #searchmenu button, #searchmenu input {
+        display: block !important;
+        border-radius: 2px;
+    }
+
+        #showRecords {
+            display: inline-block;
+            float: right;
+            width: 200px;
+            text-align: right;
+        }
+        #showRecords select {
+            width: 75px !important;
+            display: inline-block;
+        }
 /* Footer */
 footer {
     color: #666;
 }
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
+    #adv-search {
+        margin: 0 auto;
+    }
+
+    .dropdown.dropdown-lg {
+        position: static !important;
+    }
+
+        .dropdown.dropdown-lg .dropdown-menu {
+            min-width: 500px;
+        }
 }

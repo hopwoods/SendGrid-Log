@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SendGrid_Log.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,69 +18,50 @@ namespace SendGrid_Log.Controllers
             _context = context;
         }
 
-        // GET: EmailEvents
-        public IActionResult Index(int pageNo, int showRecords)
+
+        [HttpGet]
+        public IActionResult FilterIndex(string searchString, int pageNo, int showRecords)
         {
+            return RedirectToAction("Index", new { searchString = searchString, pageNo = pageNo, showRecords = showRecords });
+        }
+
+        // GET: POST: EmailEvents
+        [HttpPost, ActionName("Index")]
+        [HttpGet]
+        public IActionResult Index(string searchString, string searchField, int pageNo, int showRecords)
+        {
+
             int numberOfrecords = 10;
             if (showRecords != 0)
             {
                 numberOfrecords = showRecords;
-            } 
-            var events = from e in _context.EmailEvent
-                         select e;
-            ViewBag.totalRecords = events.Count();
-            ViewBag.noOfRecords = numberOfrecords;
-            ViewBag.pageNo = pageNo;
-
-            int skipNo = (pageNo * numberOfrecords) - numberOfrecords;
-            if(skipNo < 1)
-            {
-                ViewBag.startRecordNo = 1;
-            } else
-            {
-                ViewBag.startRecordNo = skipNo+1;
             }
+            int skipNo = (pageNo * numberOfrecords) - numberOfrecords;
+
             
-
-            if (pageNo == 0)
-            {
-                events = events.OrderByDescending(x => x.eventTimestamp).Take(numberOfrecords);
-            } else
-            {
-                events = events.OrderByDescending(x => x.eventTimestamp).Skip(skipNo).Take(numberOfrecords);
-            }
-            ViewBag.selectedRecords = events.Count();
-
-            return View(events.ToList());
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Index(string searchString, int pageNo, int showRecords)
-        {
-            int numberOfrecords = 10;
-            if (showRecords != 0)
-            {
-                numberOfrecords = showRecords;
-            }
+            //Build DB Query
             var events = from e in _context.EmailEvent
                          select e;
             ViewBag.totalRecords = events.Count();
-            ViewBag.noOfRecords = numberOfrecords;
-            ViewBag.pageNo = pageNo;
 
-            int skipNo = (pageNo * numberOfrecords) - numberOfrecords;
-            if (skipNo < 1)
+            if (!String.IsNullOrEmpty(searchString)) //Use search term
             {
-                ViewBag.startRecordNo = 1;
+                //Use Search Field
+                switch (searchField)
+                {
+                    default:
+                        events = events.Where(s => s.email.Contains(searchString));
+                        break;
+                    case "email":
+                        events = events.Where(s => s.email.Contains(searchString));
+                        break;                        
+                    case "event":
+                        events = events.Where(s => s.@event.Contains(searchString));
+                        break;
+                };
+                
             }
-            else
-            {
-                ViewBag.startRecordNo = skipNo + 1;
-            }
-
-
-            if (pageNo == 0)
+            if (pageNo == 0) //Use Pagination
             {
                 events = events.OrderByDescending(x => x.eventTimestamp).Take(numberOfrecords);
             }
@@ -87,12 +69,24 @@ namespace SendGrid_Log.Controllers
             {
                 events = events.OrderByDescending(x => x.eventTimestamp).Skip(skipNo).Take(numberOfrecords);
             }
+
+            //Set ViewBag Data
             ViewBag.selectedRecords = events.Count();
+            ViewBag.noOfRecords = numberOfrecords;
+            ViewBag.pageNo = pageNo;
+            ViewBag.searchString = searchString;
+            ViewBag.searchField = searchField;
+
+
+            if (skipNo < 1)
+            { ViewBag.startRecordNo = 1; }
+            else
+            { ViewBag.startRecordNo = skipNo + 1; }
+
 
             return View(events.ToList());
         }
-
-
+        
         // GET: Home/LogEvent
         public IActionResult LogEvent()
         {
@@ -102,13 +96,14 @@ namespace SendGrid_Log.Controllers
         // POST: Home/LogEvent
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         public IActionResult LogEvent([FromBody]
         [Bind("ID,sg_event_id,sg_message_id,email,@event,url,asm_group_id,ip,tls,cert_err,useragent,userid,reason,type,attempt,send_at")]
         List<EmailEvent> jsonData)
-        {            
+        {
             int status = 0;
-            if(jsonData.Count != 0) //Check for Events
+            if (jsonData.Count != 0) //Check for Events
             {
                 if (ModelState.IsValid)
                 {
@@ -120,53 +115,20 @@ namespace SendGrid_Log.Controllers
                                       select e;
                         dbEvent = dbEvent.Where(i => i.sg_event_id.Equals(eventID));
                         int count = dbEvent.Count();
-                        if (count == 0) {
+                        if (count == 0)
+                        {
                             _context.Add(emailEvent);
-                        };                        
+                        };
                     }
                     _context.SaveChanges(); //Save DB Changes
-                    status = 1;                    
+                    status = 1;
                 }
                 return Ok(status);
-            }           
-             else
+            }
+            else
             {
                 return Ok(status);
             }
-        }
-
-        // GET: Home/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var emailEvent = await _context.EmailEvent
-                .SingleOrDefaultAsync(m => m.ID == id);
-            if (emailEvent == null)
-            {
-                return NotFound();
-            }
-
-            return View(emailEvent);
-        }
-
-        // POST: Home/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var emailEvent = await _context.EmailEvent.SingleOrDefaultAsync(m => m.ID == id);
-            _context.EmailEvent.Remove(emailEvent);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
-
-        private bool EmailEventExists(int id)
-        {
-            return _context.EmailEvent.Any(e => e.ID == id);
         }
     }
 }
