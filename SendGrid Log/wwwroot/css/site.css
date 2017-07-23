@@ -53,28 +53,50 @@ a.navbar-brand {
 h1, h2, h3, h4, h5, h6 {
     color: #092266;
 }
+h1 {
+    font-size: 2em;
+}
+h2 {
+    font-size: 1.8em !important;
+}
+h3 {
+    font-size: 1.6em;
+}
+h4 {
+    font-size: 1.4em;
+}
+h5 {
+    font-size: 1.2em;
+}
 
 /* Tables */
 table.table {
     font-size: 0.8em;
 }
-
-    table.table th {
+    table.table thead tr {
+        background-color: #666 !important;
+    }
+    table.table thead th {
         text-transform: capitalize;
         font-size: 1.1em;
-        color: #555;
+        color: #ffffff;
     }
-
+table.table tr:nth-of-type(odd) {
+        background-color: #dedede;
+    }
+    table.table tr:hover {
+        background-color: #feee98;
+    }
+    table.table td, table.table tr {
+        border: 0 !important;
+    } 
     table.table .email-info {
         text-align: center;
     }
-
         table.table .email-info span {
             font-size: 1.5em;
             color: #0263c4;
         }
-
-
 
 /* Footer */
 footer {

@@ -18,12 +18,80 @@ namespace SendGrid_Log.Controllers
         }
 
         // GET: EmailEvents
-        public IActionResult Index()
+        public IActionResult Index(int pageNo, int showRecords)
         {
-            return View(_context.EmailEvent.ToList());
+            int numberOfrecords = 10;
+            if (showRecords != 0)
+            {
+                numberOfrecords = showRecords;
+            } 
+            var events = from e in _context.EmailEvent
+                         select e;
+            ViewBag.totalRecords = events.Count();
+            ViewBag.noOfRecords = numberOfrecords;
+            ViewBag.pageNo = pageNo;
+
+            int skipNo = (pageNo * numberOfrecords) - numberOfrecords;
+            if(skipNo < 1)
+            {
+                ViewBag.startRecordNo = 1;
+            } else
+            {
+                ViewBag.startRecordNo = skipNo+1;
+            }
+            
+
+            if (pageNo == 0)
+            {
+                events = events.OrderByDescending(x => x.eventTimestamp).Take(numberOfrecords);
+            } else
+            {
+                events = events.OrderByDescending(x => x.eventTimestamp).Skip(skipNo).Take(numberOfrecords);
+            }
+            ViewBag.selectedRecords = events.Count();
+
+            return View(events.ToList());
         }
 
-        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Index(string searchString, int pageNo, int showRecords)
+        {
+            int numberOfrecords = 10;
+            if (showRecords != 0)
+            {
+                numberOfrecords = showRecords;
+            }
+            var events = from e in _context.EmailEvent
+                         select e;
+            ViewBag.totalRecords = events.Count();
+            ViewBag.noOfRecords = numberOfrecords;
+            ViewBag.pageNo = pageNo;
+
+            int skipNo = (pageNo * numberOfrecords) - numberOfrecords;
+            if (skipNo < 1)
+            {
+                ViewBag.startRecordNo = 1;
+            }
+            else
+            {
+                ViewBag.startRecordNo = skipNo + 1;
+            }
+
+
+            if (pageNo == 0)
+            {
+                events = events.OrderByDescending(x => x.eventTimestamp).Take(numberOfrecords);
+            }
+            else
+            {
+                events = events.OrderByDescending(x => x.eventTimestamp).Skip(skipNo).Take(numberOfrecords);
+            }
+            ViewBag.selectedRecords = events.Count();
+
+            return View(events.ToList());
+        }
+
 
         // GET: Home/LogEvent
         public IActionResult LogEvent()
@@ -40,15 +108,23 @@ namespace SendGrid_Log.Controllers
         List<EmailEvent> jsonData)
         {            
             int status = 0;
-            if(jsonData.Count != 0)
+            if(jsonData.Count != 0) //Check for Events
             {
                 if (ModelState.IsValid)
                 {
-                    foreach (var emailEvent in jsonData)
+                    foreach (var emailEvent in jsonData) //Loop through events and add to DB
                     {
-                        _context.Add(emailEvent);
+                        //Check if event exists, if not add it to the db.
+                        string eventID = emailEvent.sg_event_id;
+                        var dbEvent = from e in _context.EmailEvent
+                                      select e;
+                        dbEvent = dbEvent.Where(i => i.sg_event_id.Equals(eventID));
+                        int count = dbEvent.Count();
+                        if (count == 0) {
+                            _context.Add(emailEvent);
+                        };                        
                     }
-                    _context.SaveChanges();
+                    _context.SaveChanges(); //Save DB Changes
                     status = 1;                    
                 }
                 return Ok(status);
