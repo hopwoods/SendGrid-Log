@@ -17,6 +17,9 @@
             $("#hdnShowRecords").val($(this).val());
             $("form#Search").submit();
         });
+        $("#selectEventType").change(function () {
+            $("#hdnEventType").val($(this).val());
+        });
     });
 </script>
 <h2>ITS SendGrid Email Log</h2>
@@ -34,15 +37,24 @@
                         <div class="dropdown-menu" id="searchmenu" role="menu">
                             <form asp-controller="Home" asp-action="Index" id="search" method="post" class="form-horizontal">
                                 <input type="hidden" id="pageNo" name="pageNo" value="@ViewBag.pageNo" />
-                                <input type="hidden" id="hdnSearchString" name="searchString" placeholder="Search" class="form-control" value="@ViewBag.searchString" />
+                                <input type="hidden" id="hdnSearchString" name="searchString" class="form-control" value="@ViewBag.searchString" />
+                                <input type="hidden" id="hdnEventType" name="eventType" class="form-control" value="@ViewBag.eventType" />
                                 <input type="hidden" id="hdnShowRecords" name="showRecords" value="" />
                                     <div class="form-group">
                                         <label for="searchField">Filter by</label>
                                         <select class="form-control" name="searchField" id="searchField">
                                             <option value="email" selected>Email Address</option>
-                                            <option value="event">Event Type</option>
+                                            @*<option value="event">Event Type</option>*@
                                         </select>
                                     </div>
+                                <div class="form-group">
+                                    <label for="eventType">Filter by</label>
+                                    <select class="form-control" name="selectEventType" id="selectEventType">
+                                        <option value="" selected>Choose Event Type</option>
+                                        <option value="processed">Processed</option>
+                                        <option value="delivered">Delivered</option>
+                                    </select>
+                                </div>
                                     <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
 </form>
 </div>
@@ -52,7 +64,8 @@
             </div>
            
         </div>
-    @Html.ActionLink("Clear", "index", "home")
+    <div id="clearForm">@Html.ActionLink("Clear", "index", "home")</div>
+    
     <div class="form-group" id="showRecords">
         <label for="selectShowRecords">Display</label>
         <select name="selectShowRecords" id="selectShowRecords" class="form-control">
@@ -97,7 +110,7 @@
                             <td>
                                 @Html.DisplayFor(model => item.response)
                             </td>
-                            <td>
+                            <td class="text-capitalize">
                                 @Html.DisplayFor(modelItem => item.@event)
                             </td>
                             <td>
@@ -151,7 +164,7 @@
                                 }
                                 else
                                 {
-                                    <span>@Html.ActionLink((c).ToString(), "FilterIndex", "Home", new { searchString = @ViewBag.searchString, pageNo = c, showRecords = ViewBag.noOfRecords })</span>
+                                    <span>@Html.ActionLink((c).ToString(), "FilterIndex", "Home", new { searchString = ViewBag.searchString, eventType = ViewBag.eventType, pageNo = c, showRecords = ViewBag.noOfRecords })</span>
                                 }
 
                                 c++;

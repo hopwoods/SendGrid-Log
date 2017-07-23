@@ -28,7 +28,7 @@ namespace SendGrid_Log.Controllers
         // GET: POST: EmailEvents
         [HttpPost, ActionName("Index")]
         [HttpGet]
-        public IActionResult Index(string searchString, string searchField, int pageNo, int showRecords)
+        public IActionResult Index(string searchString, string searchField, string eventType, int pageNo, int showRecords)
         {
 
             int numberOfrecords = 10;
@@ -42,15 +42,14 @@ namespace SendGrid_Log.Controllers
             //Build DB Query
             var events = from e in _context.EmailEvent
                          select e;
-            ViewBag.totalRecords = events.Count();
-
+            
             if (!String.IsNullOrEmpty(searchString)) //Use search term
             {
                 //Use Search Field
                 switch (searchField)
                 {
                     default:
-                        events = events.Where(s => s.email.Contains(searchString));
+                        events = events.Where(s => s.email.Contains("email"));
                         break;
                     case "email":
                         events = events.Where(s => s.email.Contains(searchString));
@@ -61,6 +60,25 @@ namespace SendGrid_Log.Controllers
                 };
                 
             }
+
+            if (!String.IsNullOrEmpty(eventType)) //Filter Event Type
+            {
+                //Use Search Field
+                switch (eventType)
+                {
+                    default:
+                        events = events.Where(s => s.@event.Contains("delivered"));
+                        break;
+                    case "processed":
+                        events = events.Where(s => s.@event.Contains(eventType));
+                        break;
+                    case "delivered":
+                        events = events.Where(s => s.@event.Contains(eventType));
+                        break;
+                };
+
+            }
+
             if (pageNo == 0) //Use Pagination
             {
                 events = events.OrderByDescending(x => x.eventTimestamp).Take(numberOfrecords);
@@ -76,7 +94,8 @@ namespace SendGrid_Log.Controllers
             ViewBag.pageNo = pageNo;
             ViewBag.searchString = searchString;
             ViewBag.searchField = searchField;
-
+            ViewBag.eventType = eventType;
+            ViewBag.totalRecords = events.Count();
 
             if (skipNo < 1)
             { ViewBag.startRecordNo = 1; }
