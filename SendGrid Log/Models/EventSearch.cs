@@ -48,7 +48,7 @@ namespace SendGrid_Log.Models
                     case "email":
                         events = events.Where(s => s.email.Contains(searchModel.searchString));
                         break;
-                    case "event":
+                    case "response":
                         events = events.Where(s => s.@event.Contains(searchModel.searchString));
                         break;
                 };
