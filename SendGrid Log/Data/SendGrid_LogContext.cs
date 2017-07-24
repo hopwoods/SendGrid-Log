@@ -11,6 +11,7 @@ namespace SendGrid_Log.Models
         public SendGrid_LogContext (DbContextOptions<SendGrid_LogContext> options)
             : base(options)
         {
+            
         }
 
         public DbSet<SendGrid_Log.Models.EmailEvent> EmailEvent { get; set; }

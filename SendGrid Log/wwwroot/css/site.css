@@ -110,11 +110,20 @@ table.table {
             color: #0263c4;
         }
 
-/* Search Form */
-#adv-search {
-    width: 300px;
-    display: inline-flex;
-}
+    table.table tfoot tr {
+        background-color: #ffffff !important;
+        text-align: right;
+    }
+    table.table tfoot td:first-of-type {
+        text-align: left;
+        color: #333333;
+        font-weight: bold;
+    }
+    /* Search Form */
+    #adv-search {
+        width: 300px;
+        display: inline-flex;
+    }
 
 .dropdown.dropdown-lg .dropdown-menu {
     margin-top: -1px;
@@ -186,6 +195,11 @@ button.dropdown-toggle {
         width: 75px !important;
         display: inline-block;
     }
+
+/* Pagination */
+.pagination {
+    margin: 0;
+}
 /* Footer */
 footer {
     color: #666;

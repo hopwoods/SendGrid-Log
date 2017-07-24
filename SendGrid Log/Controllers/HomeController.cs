@@ -7,103 +7,48 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
+
 namespace SendGrid_Log.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly SendGrid_LogContext _context;
-
+        //Connect to DB
+        private readonly SendGrid_LogContext _context; 
         public HomeController(SendGrid_LogContext context)
         {
             _context = context;
         }
-
-
-        [HttpGet]
-        public IActionResult FilterIndex(string searchString, int pageNo, int showRecords)
+        // Render Search Form
+        public ActionResult renderSearch() 
         {
-            return RedirectToAction("Index", new { searchString = searchString, pageNo = pageNo, showRecords = showRecords });
+            var model = new EventSearch();
+            return PartialView("renderSearch", model);
+        }
+        // Redirect for Pagination
+        [HttpGet]
+        public IActionResult FilterIndex(EventSearch searchModel)
+        {
+            return RedirectToAction("Index", new { searchString = searchModel.searchString, pageNo = searchModel.pageNo, showRecords = searchModel.showRecords });
         }
 
         // GET: POST: EmailEvents
         [HttpPost, ActionName("Index")]
         [HttpGet]
-        public IActionResult Index(string searchString, string searchField, string eventType, int pageNo, int showRecords)
+        public IActionResult Index(EventSearch searchModel)
         {
 
-            int numberOfrecords = 10;
-            if (showRecords != 0)
-            {
-                numberOfrecords = showRecords;
-            }
-            int skipNo = (pageNo * numberOfrecords) - numberOfrecords;
-
-            
-            //Build DB Query
-            var events = from e in _context.EmailEvent
-                         select e;
-            
-            if (!String.IsNullOrEmpty(searchString)) //Use search term
-            {
-                //Use Search Field
-                switch (searchField)
-                {
-                    default:
-                        events = events.Where(s => s.email.Contains("email"));
-                        break;
-                    case "email":
-                        events = events.Where(s => s.email.Contains(searchString));
-                        break;                        
-                    case "event":
-                        events = events.Where(s => s.@event.Contains(searchString));
-                        break;
-                };
-                
-            }
-
-            if (!String.IsNullOrEmpty(eventType)) //Filter Event Type
-            {
-                //Use Search Field
-                switch (eventType)
-                {
-                    default:
-                        events = events.Where(s => s.@event.Contains("delivered"));
-                        break;
-                    case "processed":
-                        events = events.Where(s => s.@event.Contains(eventType));
-                        break;
-                    case "delivered":
-                        events = events.Where(s => s.@event.Contains(eventType));
-                        break;
-                };
-
-            }
-
-            if (pageNo == 0) //Use Pagination
-            {
-                events = events.OrderByDescending(x => x.eventTimestamp).Take(numberOfrecords);
-            }
-            else
-            {
-                events = events.OrderByDescending(x => x.eventTimestamp).Skip(skipNo).Take(numberOfrecords);
-            }
+            var eventSearch = new EventSearchLogic(_context);
+            var model = eventSearch.GetEvents(searchModel);
 
             //Set ViewBag Data
-            ViewBag.selectedRecords = events.Count();
-            ViewBag.noOfRecords = numberOfrecords;
-            ViewBag.pageNo = pageNo;
-            ViewBag.searchString = searchString;
-            ViewBag.searchField = searchField;
-            ViewBag.eventType = eventType;
-            ViewBag.totalRecords = events.Count();
-
-            if (skipNo < 1)
-            { ViewBag.startRecordNo = 1; }
-            else
-            { ViewBag.startRecordNo = skipNo + 1; }
-
-
-            return View(events.ToList());
+            ViewBag.showRecords = searchModel.showRecords;
+            ViewBag.pageNo = searchModel.pageNo;
+            ViewBag.searchString = searchModel.searchString;
+            ViewBag.searchField = searchModel.searchField;
+            ViewBag.eventType = searchModel.eventType;
+            ViewBag.recordsReturned = searchModel.recordsReturned;
+            ViewBag.totalRecords = searchModel.totalRecords;
+            return View(model);
         }
         
         // GET: Home/LogEvent

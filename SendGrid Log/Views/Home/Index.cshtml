@@ -20,64 +20,24 @@
         $("#selectEventType").change(function () {
             $("#hdnEventType").val($(this).val());
         });
+        $("#PrimarySubmit").click(function () { 
+            $("form#Search").submit();
+        });
+
+        var showRecords = @ViewBag.showRecords;
+        $("#selectShowRecords > option").each(function () {
+            if ($(this).val() == showRecords) {
+                $(this).attr("selected", "selected");
+            }
+        });
     });
 </script>
 <h2>ITS SendGrid Email Log</h2>
 <a href="@Url.Action("LogEvent","Home")" class="btn btn-block bg-primary">Post Events</a>
 <br />
 
-<div id="SearchOptions" class="well well-sm">
+@Html.Partial("_SearchForm", new SendGrid_Log.Models.EventSearch())
 
-        <div class="input-group" id="adv-search">
-            <input type="text" id="searchString" placeholder="Search" class="form-control" value="@ViewBag.searchString" />
-            <div class="input-group-btn">
-                <div class="btn-group" role="group">
-                    <div class="dropdown dropdown-lg">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
-                        <div class="dropdown-menu" id="searchmenu" role="menu">
-                            <form asp-controller="Home" asp-action="Index" id="search" method="post" class="form-horizontal">
-                                <input type="hidden" id="pageNo" name="pageNo" value="@ViewBag.pageNo" />
-                                <input type="hidden" id="hdnSearchString" name="searchString" class="form-control" value="@ViewBag.searchString" />
-                                <input type="hidden" id="hdnEventType" name="eventType" class="form-control" value="@ViewBag.eventType" />
-                                <input type="hidden" id="hdnShowRecords" name="showRecords" value="" />
-                                    <div class="form-group">
-                                        <label for="searchField">Filter by</label>
-                                        <select class="form-control" name="searchField" id="searchField">
-                                            <option value="email" selected>Email Address</option>
-                                            @*<option value="event">Event Type</option>*@
-                                        </select>
-                                    </div>
-                                <div class="form-group">
-                                    <label for="eventType">Filter by</label>
-                                    <select class="form-control" name="selectEventType" id="selectEventType">
-                                        <option value="" selected>Choose Event Type</option>
-                                        <option value="processed">Processed</option>
-                                        <option value="delivered">Delivered</option>
-                                    </select>
-                                </div>
-                                    <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
-</form>
-</div>
-                    </div>
-                    <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
-                </div>
-            </div>
-           
-        </div>
-    <div id="clearForm">@Html.ActionLink("Clear", "index", "home")</div>
-    
-    <div class="form-group" id="showRecords">
-        <label for="selectShowRecords">Display</label>
-        <select name="selectShowRecords" id="selectShowRecords" class="form-control">
-            <option value="10" selected>10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-        </select>
-    </div>  
-   
-
-</div> 
         <table class="table">
             <thead>
                 <tr>
@@ -125,51 +85,38 @@
                 else
                 {
                     <tr><td colspan="5">There are no events logged.</td></tr>
-
                 }
 
             </tbody>
             <tfoot>
-                <tr>
-                    @{
-                        int endRecordNo = 0;
-                        if (ViewBag.selectedRecords < ViewBag.noOfRecords)
-                        {
-                            endRecordNo = (ViewBag.noOfRecords * (ViewBag.pageNo - 1)) + ViewBag.selectedRecords;
-                        }
-                        else if (ViewBag.selectedRecords >= ViewBag.noOfRecords)
-                        {
-                            endRecordNo = ViewBag.noOfRecords;
-                        }
-                        else
-                        {
-                            endRecordNo = ViewBag.noOfRecords * ViewBag.pageNo;
-                        }
-
-                    }
-                    <td colspan="3">Showing @ViewBag.startRecordNo to @endRecordNo of @ViewBag.totalRecords</td>
+                <tr>                    
+                    <td colspan="3">@ViewBag.recordsReturned of @ViewBag.totalRecords records</td>
                     <td colspan="2">
-                        @{
-                            decimal noOfPages = (ViewBag.totalRecords / ViewBag.noOfRecords);
-                            int c = 1;
-                            if (ViewBag.pageNo == 0)
-                            {
-                                ViewBag.pageNo = 1;
-                            }
-                            while (c <= (noOfPages + 1))
-                            {
-                                if (ViewBag.pageNo == c)
-                                {
-                                    <span>@ViewBag.pageNo</span>
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                @{
+                                    int noOfPages = ViewBag.totalRecords / ViewBag.showRecords;
+                                    int c = 1;
+                                    if (ViewBag.pageNo == 0)
+                                    {
+                                        ViewBag.pageNo = 1;
+                                    }
+                                    while (c <= (noOfPages + 1))
+                                    {
+                                        if (ViewBag.pageNo == c)
+                                        {
+                                            <li class="active"><a>@ViewBag.pageNo</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li>@Html.ActionLink((c).ToString(), "FilterIndex", "Home", new { searchString = ViewBag.searchString, eventType = ViewBag.eventType, pageNo = c, showRecords = ViewBag.noOfRecords })</li>
+                                        }
+                                        c++;
+                                    }
                                 }
-                                else
-                                {
-                                    <span>@Html.ActionLink((c).ToString(), "FilterIndex", "Home", new { searchString = ViewBag.searchString, eventType = ViewBag.eventType, pageNo = c, showRecords = ViewBag.noOfRecords })</span>
-                                }
-
-                                c++;
-                            }
-                        }
+                            </ul>
+                        </nav>
+                        
                     </td>
                 </tr>
             </tfoot>

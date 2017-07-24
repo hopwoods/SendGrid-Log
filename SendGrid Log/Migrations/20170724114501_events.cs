@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace SendGrid_Log.Migrations
 {
-    public partial class Events : Migration
+    public partial class events : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,12 +15,12 @@ namespace SendGrid_Log.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Send_at = table.Column<string>(nullable: true),
                     asm_group_id = table.Column<int>(nullable: false),
                     attempt = table.Column<string>(nullable: true),
                     cert_err = table.Column<string>(nullable: true),
                     email = table.Column<string>(nullable: true),
                     @event = table.Column<string>(name: "event", nullable: true),
+                    eventSend_at = table.Column<DateTime>(nullable: false),
                     eventTimestamp = table.Column<DateTime>(nullable: false),
                     ip = table.Column<string>(nullable: true),
                     reason = table.Column<string>(nullable: true),

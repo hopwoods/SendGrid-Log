@@ -8,8 +8,8 @@ using SendGrid_Log.Models;
 namespace SendGrid_Log.Migrations
 {
     [DbContext(typeof(SendGrid_LogContext))]
-    [Migration("20170722183439_Events")]
-    partial class Events
+    [Migration("20170724114501_events")]
+    partial class events
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -22,8 +22,6 @@ namespace SendGrid_Log.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Send_at");
-
                     b.Property<int>("asm_group_id");
 
                     b.Property<string>("attempt");
@@ -33,6 +31,8 @@ namespace SendGrid_Log.Migrations
                     b.Property<string>("email");
 
                     b.Property<string>("event");
+
+                    b.Property<DateTime>("eventSend_at");
 
                     b.Property<DateTime>("eventTimestamp");
 
