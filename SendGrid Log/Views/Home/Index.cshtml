@@ -2,50 +2,139 @@
 @{
     ViewData["Title"] = "ITS SendGrid Email Log";
 }
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#searchString").change(function () {
+            $("#hdnSearchString").val($(this).val());
+        });
+        $("#searchString").keypress(function (e) {
+            if (e.which == 13) {
+                $("#hdnSearchString").val($(this).val());
+                $("form#Search").submit();
+            };
+        });
+        $("#selectShowRecords").change(function () {
+            $("#hdnShowRecords").val($(this).val());
+            $("form#Search").submit();
+        });
+        $("#selectEventType").change(function () {
+            $("#hdnEventType").val($(this).val());
+        });
+        $("#PrimarySubmit").click(function () { 
+            $("form#Search").submit();
+        });
 
+        var showRecords = @ViewBag.showRecords;
+        $("#selectShowRecords > option").each(function () {
+            if ($(this).val() == showRecords) {
+                $(this).attr("selected", "selected");
+            }
+        });
+
+        $(".page-link").click(function (e) {
+            e.preventDefault();
+            var searchstring = $(this).data("searchstring");
+            var showrecords = $(this).data("showrecords");
+            var eventtype = $(this).data("eventtype");
+            var currentpage = $(this).data("currentpage");
+
+            $("#hdnSearchString").val(searchstring);
+            $("#hdnShowRecords").val(showrecords);
+            $("#hdnEventType").val(eventtype);
+            $("#hdnCurrentPage").val(currentpage);
+            $("form#Search").submit();
+        });
+    });
+</script>
 <h2>ITS SendGrid Email Log</h2>
-<a href="@Url.Action("LogEvent","Home")">Post Event</a>
 <br />
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.eventTimestamp)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.response)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.@event)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.email)
-            </th>            
-            <th class="email-info">
-                Info
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.eventTimestamp)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => item.response)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.@event)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.email)
-                </td>
-                <td class="email-info">
-                    <span class="fa fa-info-circle"></span>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+@Html.Partial("_SearchForm", new SendGrid_Log.Models.EventSearch())
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.eventTimestamp)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.response)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.@event)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.email)
+                    </th>
+                    <th class="email-info">
+                        Info
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count() > 0)
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.eventTimestamp)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.response)
+                            </td>
+                            <td class="text-capitalize">
+                                @Html.DisplayFor(modelItem => item.@event)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.email)
+                            </td>
+                            <td class="email-info">
+                                <span class="fa fa-info-circle"></span>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="5">There are no events logged.</td></tr>
+                }
+
+            </tbody>
+            <tfoot>
+                <tr>                    
+                    <td colspan="3">@ViewBag.recordsReturned of @ViewBag.totalRecords records</td>
+                    <td colspan="2">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                @{
+                                    int noOfPages = ViewBag.totalRecords / ViewBag.showRecords;
+                                    int c = 1;
+                                    if (ViewBag.currentPage == 0 || ViewBag.currentPage == null)
+                                    {
+                                        ViewBag.currentPage = 1;
+                                    }
+                                    while (c <= (noOfPages + 1))
+                                    {
+                                        if (ViewBag.currentPage == c)
+                                        {
+                                            <li class="active"><a class="disabled">@c</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li>
+                                                <a class="page-link" href="@Url.Action("Index","Home")" data-searchString="@ViewBag.searchString" data-eventType="@ViewBag.eventType" data-currentPage="@c" data-showRecords="@ViewBag.showRecords">@c</a>
+                                            </li>
+                                        }
+                                        c++;
+                                    }
+                                }
+                            </ul>
+                        </nav>                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.ActionLink("Export to Excel","Export","Home", new { searchString = ViewBag.searchString, eventType = ViewBag.eventType, isExport = true})</td>
+                </tr>
+            </tfoot>
+        </table>

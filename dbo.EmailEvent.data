@@ -1,0 +1,3 @@
+﻿SELECT COUNT(*) FROM EmailEvent;
+
+TRUNCATE TABLE EmailEvent;

@@ -1,0 +1,51 @@
+
+
+<div id="SearchOptions" class="well well-sm">
+    <div class="input-group" id="adv-search">
+        <input type="text" id="searchString" placeholder="Search" class="form-control" value="@ViewBag.searchString" />
+        <div class="input-group-btn">
+            <div class="btn-group" role="group">
+                <div class="dropdown dropdown-lg">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+                    <div class="dropdown-menu" id="searchmenu" role="menu">
+                        <form asp-controller="Home" asp-action="EventSearch" id="search" method="post" class="form-horizontal">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" id="hdnCurrentPage" name="currentPage" value="@ViewBag.pageNo" />
+                            <input type="hidden" id="hdnSearchString" name="searchString" class="form-control" value="@ViewBag.searchString" />
+                            <input type="hidden" id="hdnEventType" name="eventType" class="form-control" value="@ViewBag.eventType" />
+                            <input type="hidden" id="hdnShowRecords" name="showRecords" value="" />
+                            <div class="form-group">
+                                <label for="searchField">Filter by</label>
+                                <select class="form-control" name="searchField" id="searchField">
+                                    <option value="email" selected>Email Address</option>
+                                    <option value="response">Response</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="eventType">Filter by</label>
+                                <select class="form-control" name="selectEventType" id="selectEventType">
+                                    <option value="" selected>Choose Event Type</option>
+                                    <option value="processed">Processed</option>
+                                    <option value="delivered">Delivered</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                        </form>
+                    </div>
+                </div>
+                <button type="button" id="PrimarySubmit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+            </div>
+        </div>
+    </div>
+    <div id="clearForm">@Html.ActionLink("Clear", "index", "home")</div>
+    <div class="form-group" id="showRecords">
+        <label for="selectShowRecords">Display</label>
+        <select name="selectShowRecords" id="selectShowRecords" class="form-control">            
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="75">75</option>
+            <option value="100">100</option>
+            <option value="200">200</option>
+        </select>
+    </div>
+</div> 
