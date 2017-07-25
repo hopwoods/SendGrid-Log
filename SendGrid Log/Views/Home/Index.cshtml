@@ -30,10 +30,23 @@
                 $(this).attr("selected", "selected");
             }
         });
+
+        $(".page-link").click(function (e) {
+            e.preventDefault();
+            var searchstring = $(this).data("searchstring");
+            var showrecords = $(this).data("showrecords");
+            var eventtype = $(this).data("eventtype");
+            var currentpage = $(this).data("currentpage");
+
+            $("#hdnSearchString").val(searchstring);
+            $("#hdnShowRecords").val(showrecords);
+            $("#hdnEventType").val(eventtype);
+            $("#hdnCurrentPage").val(currentpage);
+            $("form#Search").submit();
+        });
     });
 </script>
 <h2>ITS SendGrid Email Log</h2>
-<a href="@Url.Action("LogEvent","Home")" class="btn btn-block bg-primary">Post Events</a>
 <br />
 
 @Html.Partial("_SearchForm", new SendGrid_Log.Models.EventSearch())
@@ -97,27 +110,31 @@
                                 @{
                                     int noOfPages = ViewBag.totalRecords / ViewBag.showRecords;
                                     int c = 1;
-                                    if (ViewBag.pageNo == 0)
+                                    if (ViewBag.currentPage == 0 || ViewBag.currentPage == null)
                                     {
-                                        ViewBag.pageNo = 1;
+                                        ViewBag.currentPage = 1;
                                     }
                                     while (c <= (noOfPages + 1))
                                     {
-                                        if (ViewBag.pageNo == c)
+                                        if (ViewBag.currentPage == c)
                                         {
-                                            <li class="active"><a>@ViewBag.pageNo</a></li>
+                                            <li class="active"><a class="disabled">@c</a></li>
                                         }
                                         else
                                         {
-                                            <li>@Html.ActionLink((c).ToString(), "FilterIndex", "Home", new { searchString = ViewBag.searchString, eventType = ViewBag.eventType, pageNo = c, showRecords = ViewBag.noOfRecords })</li>
+                                            <li>
+                                                <a class="page-link" href="@Url.Action("Index","Home")" data-searchString="@ViewBag.searchString" data-eventType="@ViewBag.eventType" data-currentPage="@c" data-showRecords="@ViewBag.showRecords">@c</a>
+                                            </li>
                                         }
                                         c++;
                                     }
                                 }
                             </ul>
-                        </nav>
-                        
+                        </nav>                        
                     </td>
+                </tr>
+                <tr>
+                    <td>@Html.ActionLink("Export to Excel","Export","Home", new { searchString = ViewBag.searchString, eventType = ViewBag.eventType, isExport = true})</td>
                 </tr>
             </tfoot>
         </table>

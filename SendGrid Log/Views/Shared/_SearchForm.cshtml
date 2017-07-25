@@ -8,8 +8,9 @@
                 <div class="dropdown dropdown-lg">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
                     <div class="dropdown-menu" id="searchmenu" role="menu">
-                        <form asp-controller="Home" asp-action="Index" id="search" method="post" class="form-horizontal">
-                            <input type="hidden" id="pageNo" name="pageNo" value="@ViewBag.pageNo" />
+                        <form asp-controller="Home" asp-action="EventSearch" id="search" method="post" class="form-horizontal">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" id="hdnCurrentPage" name="currentPage" value="@ViewBag.pageNo" />
                             <input type="hidden" id="hdnSearchString" name="searchString" class="form-control" value="@ViewBag.searchString" />
                             <input type="hidden" id="hdnEventType" name="eventType" class="form-control" value="@ViewBag.eventType" />
                             <input type="hidden" id="hdnShowRecords" name="showRecords" value="" />
@@ -40,10 +41,11 @@
     <div class="form-group" id="showRecords">
         <label for="selectShowRecords">Display</label>
         <select name="selectShowRecords" id="selectShowRecords" class="form-control">            
-            <option value="10">10</option>
             <option value="25">25</option>
             <option value="50">50</option>
+            <option value="75">75</option>
             <option value="100">100</option>
+            <option value="200">200</option>
         </select>
     </div>
 </div> 

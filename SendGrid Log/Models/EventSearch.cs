@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SendGrid_Log.Models;
 
 namespace SendGrid_Log.Models
 {
@@ -14,16 +9,17 @@ namespace SendGrid_Log.Models
         public string searchField { get; set; }
         public string eventType { get; set; }
         public int showRecords { get; set; }
-        public int pageNo { get; set; }          
+        public int currentPage { get; set; }          
         public int skipNo { get; set; }
         public int recordsReturned { get; set; }
         public int totalRecords { get; set; }
+        public bool isExport { get; set; }
     }
 
     public class EventSearchLogic
     {
+        //Connect to DB
         private readonly SendGrid_LogContext _context;
-
         public EventSearchLogic(SendGrid_LogContext context)
         {
             _context = context;
@@ -32,13 +28,20 @@ namespace SendGrid_Log.Models
         public IQueryable<EmailEvent> GetEvents(EventSearch searchModel)
         {
             //Build DB Query
-            var events = _context.EmailEvent.AsQueryable();            
+
+            //Basic Select Query
+            var events = _context.EmailEvent.AsQueryable();       
+            
+            //Set number of events to retrieve. Either post value from the search form or a default.
             if (searchModel.showRecords == 0)
             {
-                searchModel.showRecords = 10;
+                searchModel.showRecords = 25;
             }
-            searchModel.skipNo = (searchModel.pageNo * searchModel.showRecords) - searchModel.showRecords;
-            if (!String.IsNullOrEmpty(searchModel.searchString)) //Use search term
+            //Set number of records to skip for pagination
+            searchModel.skipNo = (searchModel.currentPage * searchModel.showRecords) - searchModel.showRecords;
+            
+            //Use search term
+            if (!String.IsNullOrEmpty(searchModel.searchString)) 
             {
                 switch (searchModel.searchField)
                 {
@@ -54,7 +57,8 @@ namespace SendGrid_Log.Models
                 };
             }
 
-            if (!String.IsNullOrEmpty(searchModel.eventType)) //Filter Event Type
+            //Filter Event Type
+            if (!String.IsNullOrEmpty(searchModel.eventType)) 
             {
                 switch (searchModel.eventType)
                 {
@@ -69,9 +73,16 @@ namespace SendGrid_Log.Models
                         break;
                 };
             }
+            //Get total records before pagination
             searchModel.totalRecords = events.Count();
+
+            //Check if Exporting
+            if(searchModel.isExport == true)
+            {
+                events = events.OrderByDescending(x => x.eventTimestamp);
+            }
             //Use Pagination
-            if (searchModel.pageNo == 0) 
+            else if (searchModel.currentPage == 0) 
             {
                 events = events.OrderByDescending(x => x.eventTimestamp).Take(searchModel.showRecords);
             }
@@ -79,7 +90,10 @@ namespace SendGrid_Log.Models
             {
                 events = events.OrderByDescending(x => x.eventTimestamp).Skip(searchModel.skipNo).Take(searchModel.showRecords);
             }
+            //Get number of records returned
             searchModel.recordsReturned = events.Count();
+
+            //return records
             return events;
         }
     }

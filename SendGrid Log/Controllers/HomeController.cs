@@ -1,48 +1,55 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
 using SendGrid_Log.Models;
-using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-
-
+using System.Text;
 
 namespace SendGrid_Log.Controllers
 {
+    [RequireHttps]
     public class HomeController : Controller
+
     {
         //Connect to DB
-        private readonly SendGrid_LogContext _context; 
-        public HomeController(SendGrid_LogContext context)
+        private readonly SendGrid_LogContext _context;
+        private readonly IHostingEnvironment _hostingEnvironment;
+
+        public HomeController(IHostingEnvironment hostingEnvironment, SendGrid_LogContext context)
         {
             _context = context;
+            _hostingEnvironment = hostingEnvironment;
         }
         // Render Search Form
-        public ActionResult renderSearch() 
+        public ActionResult renderSearch()
         {
             var model = new EventSearch();
             return PartialView("renderSearch", model);
         }
         // Redirect for Pagination
-        [HttpGet]
-        public IActionResult FilterIndex(EventSearch searchModel)
-        {
-            return RedirectToAction("Index", new { searchString = searchModel.searchString, pageNo = searchModel.pageNo, showRecords = searchModel.showRecords });
-        }
+        //[HttpGet]
+        //public IActionResult FilterIndex(EventSearch searchModel)
+        //{
+        //    return RedirectToAction("Index", new {
+        //        searchString = searchModel.searchString,
+        //        searchField = searchModel.searchField,
+        //        currentPage = searchModel.currentPage,
+        //        showRecords = searchModel.showRecords
+        //    });
+        //}
 
         // GET: POST: EmailEvents
-        [HttpPost, ActionName("Index")]
         [HttpGet]
         public IActionResult Index(EventSearch searchModel)
         {
-
+            //Get records from DB using the search logic
             var eventSearch = new EventSearchLogic(_context);
             var model = eventSearch.GetEvents(searchModel);
-
             //Set ViewBag Data
             ViewBag.showRecords = searchModel.showRecords;
-            ViewBag.pageNo = searchModel.pageNo;
+            ViewBag.currentPage = searchModel.currentPage;
             ViewBag.searchString = searchModel.searchString;
             ViewBag.searchField = searchModel.searchField;
             ViewBag.eventType = searchModel.eventType;
@@ -50,7 +57,71 @@ namespace SendGrid_Log.Controllers
             ViewBag.totalRecords = searchModel.totalRecords;
             return View(model);
         }
-        
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EventSearch(EventSearch searchModel)
+        {
+            //Get records from DB using the search logic
+            var eventSearch = new EventSearchLogic(_context);
+            var model = eventSearch.GetEvents(searchModel);
+
+            //Set ViewBag Data
+            ViewBag.showRecords = searchModel.showRecords;
+            ViewBag.currentPage = searchModel.currentPage;
+            ViewBag.searchString = searchModel.searchString;
+            ViewBag.searchField = searchModel.searchField;
+            ViewBag.eventType = searchModel.eventType;
+            ViewBag.recordsReturned = searchModel.recordsReturned;
+            ViewBag.totalRecords = searchModel.totalRecords;
+            return View("Index", model);
+        }
+
+
+
+        public IActionResult Export(EventSearch searchModel)
+        {
+            //Get records from DB using the search logic
+            var eventSearch = new EventSearchLogic(_context);
+            var model = eventSearch.GetEvents(searchModel);
+
+            
+
+            string sWebRootFolder = _hostingEnvironment.WebRootPath;
+            string sFileName = @"demo.xlsx";
+            string URL = string.Format("{0}://{1}/{2}", Request.Scheme, Request.Host, sFileName);
+            FileInfo file = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
+            if (file.Exists)
+            {
+                file.Delete();
+                file = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
+            }
+            using (ExcelPackage package = new ExcelPackage(file))
+            {
+                // add a new worksheet to the empty workbook
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Email Events");
+                //First add the headers
+                worksheet.Cells[1, 1].Value = "Timestamp";
+                worksheet.Cells[1, 2].Value = "Response";
+                worksheet.Cells[1, 3].Value = "Event Type";
+                worksheet.Cells[1, 4].Value = "Email Address";
+
+                //Add values
+                var i = 2;
+                foreach (var item in model)
+                {
+                    worksheet.Cells["A" + i.ToString()].Value = item.@event;
+                    worksheet.Cells["B" + i.ToString()].Value = item.email;
+                    worksheet.Cells["C" + i.ToString()].Value = item.eventTimestamp;
+                    worksheet.Cells["C" + i.ToString()].Style.Numberformat.Format = "dd-mm-yyyy hh:MM:ss";
+                    worksheet.Cells["D" + i.ToString()].Value = item.response;
+                    i++;
+                }
+                package.Save(); //Save the workbook.
+            }
+            return Redirect(URL);
+        }
+
         // GET: Home/LogEvent
         public IActionResult LogEvent()
         {

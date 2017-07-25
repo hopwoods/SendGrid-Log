@@ -80,17 +80,18 @@ table.table {
 }
 
     table.table thead tr {
-        background-color: #666 !important;
+        background-color: #999 !important;
     }
 
     table.table thead th {
         text-transform: capitalize;
         font-size: 1.1em;
         color: #ffffff;
+        border: 0;
     }
 
     table.table tr:nth-of-type(odd) {
-        background-color: #dedede;
+        background-color: #efefef;
     }
 
     table.table tr:hover {
