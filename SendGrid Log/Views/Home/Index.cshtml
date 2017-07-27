@@ -59,7 +59,14 @@
 <br />
 
 @Html.Partial("_SearchForm", new SendGrid_Log.Models.EventSearch())
+@if (Model.Count() > 0)
+{
+    <div class="export">
+        <span class="fa fa-download"></span>
+        @Html.ActionLink("Export to Excel", "Export", "Home", new { searchString = ViewBag.searchString, eventType = ViewBag.eventType, isExport = true })
+    </div>
 
+}
 <table class="table">
     <thead>
         <tr>
@@ -71,16 +78,16 @@
                         sortOrder = "desc";
                     }
                 }
-                <a href="" class="sort-link" data-sortOrder="@sortOrder" data-sortField="eventTimestamp">@Html.DisplayNameFor(model => model.eventTimestamp)</a>
+                <a href="" class="sort-link" data-sortOrder="@sortOrder" data-sortField="eventTimestamp" data-currentPage="@ViewBag.cuurentPage">@Html.DisplayNameFor(model => model.eventTimestamp)</a>
             </th>
             <th>
-                <a href="" class="sort-link" data-sortOrder="@sortOrder" data-sortField="response">@Html.DisplayNameFor(model => model.response)</a>
+                <a href="" class="sort-link" data-sortOrder="@sortOrder" data-sortField="response" data-currentPage="@ViewBag.cuurentPage">@Html.DisplayNameFor(model => model.response)</a>
             </th>
             <th>
-                <a href="" class="sort-link" data-sortOrder="@sortOrder" data-sortField="@@event">@Html.DisplayNameFor(model => model.@event)</a>
+                <a href="" class="sort-link" data-sortOrder="@sortOrder" data-sortField="@@event" data-currentPage="@ViewBag.cuurentPage">@Html.DisplayNameFor(model => model.@event)</a>
             </th>
             <th>
-                <a href="" class="sort-link" data-sortOrder="@sortOrder" data-sortField="email">@Html.DisplayNameFor(model => model.email)</a>
+                <a href="" class="sort-link" data-sortOrder="@sortOrder" data-sortField="email" data-currentPage="@ViewBag.cuurentPage">@Html.DisplayNameFor(model => model.email)</a>
             </th>
             <th class="email-info">
                 Info
@@ -149,8 +156,9 @@
                 </nav>
             </td>
         </tr>
-        <tr>
-            <td>@Html.ActionLink("Export to Excel", "Export", "Home", new { searchString = ViewBag.searchString, eventType = ViewBag.eventType, isExport = true })</td>
-        </tr>
     </tfoot>
 </table>
+<div class="export">
+    <span class="fa fa-download"></span>
+    @Html.ActionLink("Export to Excel", "Export", "Home", new { searchString = ViewBag.searchString, eventType = ViewBag.eventType, isExport = true })
+</div>

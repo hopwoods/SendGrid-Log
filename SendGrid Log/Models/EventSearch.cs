@@ -120,7 +120,7 @@ namespace SendGrid_Log.Models
                         events = events.OrderByDescending(x => x.response);
                     }
                     break;
-                case "@Event":
+                case "@event":
                     if (searchModel.sortOrder == "asc")
                     {
                         events = events.OrderBy(x => x.@event);
