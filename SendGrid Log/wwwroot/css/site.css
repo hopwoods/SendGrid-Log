@@ -92,6 +92,7 @@ table.table {
     table.table thead th a {
         color: #ffffff;
         text-decoration: underline;
+        cursor: pointer;
     }
 
     table.table tr:nth-of-type(odd) {
@@ -217,6 +218,7 @@ button.dropdown-toggle {
 footer {
     color: #666;
 }
+
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     #adv-search {
