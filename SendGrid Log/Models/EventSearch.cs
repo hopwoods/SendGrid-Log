@@ -14,6 +14,8 @@ namespace SendGrid_Log.Models
         public int recordsReturned { get; set; }
         public int totalRecords { get; set; }
         public bool isExport { get; set; }
+        public string sortOrder { get; set; }
+        public string sortField { get; set; }
     }
 
     public class EventSearchLogic
@@ -76,6 +78,69 @@ namespace SendGrid_Log.Models
             //Get total records before pagination
             searchModel.totalRecords = events.Count();
 
+            if (searchModel.sortOrder == null)
+            {
+                searchModel.sortOrder = "desc";
+            }
+            if (searchModel.sortField == null)
+            {
+                searchModel.sortField = "eventTimestamp";
+            }
+
+            //Define Sort Field & order
+            switch (searchModel.sortField)
+            {
+                default:
+                    if(searchModel.sortOrder == "asc")
+                    {
+                        events = events.OrderBy(x => x.eventTimestamp);
+                    } else
+                    {
+                        events = events.OrderByDescending(x => x.eventTimestamp);
+                    }
+                    break;
+
+                case "eventTimestamp":
+                    if (searchModel.sortOrder == "asc")
+                    {
+                        events = events.OrderBy(x => x.eventTimestamp);
+                    }
+                    else
+                    {
+                        events = events.OrderByDescending(x => x.eventTimestamp);
+                    }
+                    break;
+                case "response":
+                    if (searchModel.sortOrder == "asc")
+                    {
+                        events = events.OrderBy(x => x.response);
+                    }
+                    else
+                    {
+                        events = events.OrderByDescending(x => x.response);
+                    }
+                    break;
+                case "@event":
+                    if (searchModel.sortOrder == "asc")
+                    {
+                        events = events.OrderBy(x => x.@event);
+                    }
+                    else
+                    {
+                        events = events.OrderByDescending(x => x.@event);
+                    }
+                    break;
+                case "emailaddress":
+                    if (searchModel.sortOrder == "asc")
+                    {
+                        events = events.OrderBy(x => x.email);
+                    }
+                    else
+                    {
+                        events = events.OrderByDescending(x => x.email);
+                    }
+                    break;
+            }
             //Check if Exporting
             if(searchModel.isExport == true)
             {
@@ -84,11 +149,11 @@ namespace SendGrid_Log.Models
             //Use Pagination
             else if (searchModel.currentPage == 0) 
             {
-                events = events.OrderByDescending(x => x.eventTimestamp).Take(searchModel.showRecords);
+                events = events.Take(searchModel.showRecords);
             }
             else
             {
-                events = events.OrderByDescending(x => x.eventTimestamp).Skip(searchModel.skipNo).Take(searchModel.showRecords);
+                events = events.Skip(searchModel.skipNo).Take(searchModel.showRecords); 
             }
             //Get number of records returned
             searchModel.recordsReturned = events.Count();

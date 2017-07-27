@@ -55,6 +55,8 @@ namespace SendGrid_Log.Controllers
             ViewBag.eventType = searchModel.eventType;
             ViewBag.recordsReturned = searchModel.recordsReturned;
             ViewBag.totalRecords = searchModel.totalRecords;
+            ViewBag.sortOrder = searchModel.sortOrder;
+            ViewBag.sortField = searchModel.sortField;
             return View(model);
         }
 
@@ -74,18 +76,17 @@ namespace SendGrid_Log.Controllers
             ViewBag.eventType = searchModel.eventType;
             ViewBag.recordsReturned = searchModel.recordsReturned;
             ViewBag.totalRecords = searchModel.totalRecords;
+            ViewBag.sortOrder = searchModel.sortOrder;
+            ViewBag.sortField = searchModel.sortField;
             return View("Index", model);
         }
 
-
-
+        //Action for exporting query to an Excel spreadsheet.
         public IActionResult Export(EventSearch searchModel)
         {
             //Get records from DB using the search logic
             var eventSearch = new EventSearchLogic(_context);
-            var model = eventSearch.GetEvents(searchModel);
-
-            
+            var model = eventSearch.GetEvents(searchModel);           
 
             string sWebRootFolder = _hostingEnvironment.WebRootPath;
             string sFileName = @"demo.xlsx";
