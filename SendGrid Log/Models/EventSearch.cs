@@ -73,6 +73,7 @@ namespace SendGrid_Log.Models
                         break;
                 };
             }
+
             //Get total records before pagination
             searchModel.totalRecords = events.Count();
             if (searchModel.sortOrder == null)
