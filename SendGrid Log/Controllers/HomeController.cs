@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
 using SendGrid_Log.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace SendGrid_Log.Controllers
 {
@@ -28,17 +28,6 @@ namespace SendGrid_Log.Controllers
             var model = new EventSearch();
             return PartialView("renderSearch", model);
         }
-        // Redirect for Pagination
-        //[HttpGet]
-        //public IActionResult FilterIndex(EventSearch searchModel)
-        //{
-        //    return RedirectToAction("Index", new {
-        //        searchString = searchModel.searchString,
-        //        searchField = searchModel.searchField,
-        //        currentPage = searchModel.currentPage,
-        //        showRecords = searchModel.showRecords
-        //    });
-        //}
 
         // GET: POST: EmailEvents
         [HttpGet]
@@ -89,7 +78,8 @@ namespace SendGrid_Log.Controllers
             var model = eventSearch.GetEvents(searchModel);           
 
             string sWebRootFolder = _hostingEnvironment.WebRootPath;
-            string sFileName = @"demo.xlsx";
+            DateTime datetime = System.DateTime.Now;
+            string sFileName = @"Email-Events " + datetime.ToString("dd-MM-yy hhmmss") + ".xlsx";
             string URL = string.Format("{0}://{1}/{2}", Request.Scheme, Request.Host, sFileName);
             FileInfo file = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
             if (file.Exists)
@@ -111,11 +101,11 @@ namespace SendGrid_Log.Controllers
                 var i = 2;
                 foreach (var item in model)
                 {
-                    worksheet.Cells["A" + i.ToString()].Value = item.@event;
-                    worksheet.Cells["B" + i.ToString()].Value = item.email;
-                    worksheet.Cells["C" + i.ToString()].Value = item.eventTimestamp;
-                    worksheet.Cells["C" + i.ToString()].Style.Numberformat.Format = "dd-mm-yyyy hh:MM:ss";
-                    worksheet.Cells["D" + i.ToString()].Value = item.response;
+                    worksheet.Cells["A" + i.ToString()].Value = item.eventTimestamp;
+                    worksheet.Cells["A" + i.ToString()].Style.Numberformat.Format = "dd-mm-yyyy hh:MM:ss";
+                    worksheet.Cells["B" + i.ToString()].Value = item.response;
+                    worksheet.Cells["C" + i.ToString()].Value = item.@event;                    
+                    worksheet.Cells["D" + i.ToString()].Value = item.email;
                     i++;
                 }
                 package.Save(); //Save the workbook.

@@ -56,6 +56,50 @@
         console.log(currentPage);
         $("form#Search").submit();
     });
+    $(".sort-link").each(function () {
+        var sortOrder = $(this).data("sortorder");
+        var dataType = $(this).data("datatype");
+        var currentSortField = $("#hdnSortField").val();
+        var field = $(this).data("sortfield");
+
+        console.log(currentSortField);
+        console.log(field);
+        console.log(sortOrder);
+        console.log(dataType);
+
+        $(this).children("span.sort-icon").removeClass("fa-sort-alpha-asc");
+        $(this).children("span.sort-icon").removeClass("fa-sort-alpha-desc");
+        $(this).children("span.sort-icon").removeClass("fa-sort-amount-asc");
+        $(this).children("span.sort-icon").removeClass("fa-sort-amount-desc");
+
+        if (currentSortField == field) {
+            if (dataType == "amount") {
+                switch (sortOrder) {
+                    default:
+                        $(this).children("span.sort-icon").addClass("fa-sort-amount-asc");
+                        break;
+                    case "asc":
+                        $(this).children("span.sort-icon").addClass("fa-sort-amount-asc");
+                        break;
+                    case "desc":
+                        $(this).children("span.sort-icon").addClass("fa-sort-amount-desc");
+                        break;
+                }
+            } else if (dataType == "string") {
+                switch (sortOrder) {
+                    default:
+                        $(this).children("span.sort-icon").addClass("fa-sort-alpha-asc");
+                        break;
+                    case "asc":
+                        $(this).children("span.sort-icon").addClass("fa-sort-alpha-asc");
+                        break;
+                    case "desc":
+                        $(this).children("span.sort-icon").addClass("fa-sort-alpha-desc");
+                        break;
+                }
+            }
+        }
+    });
 });
 </script>
 <h2>ITS SendGrid Email Log</h2>
@@ -63,14 +107,12 @@
 
 @Html.Partial("_SearchForm", new SendGrid_Log.Models.EventSearch())
 @{
-
     if (Model.Count() > 0)
     {
         <div class="export">
             <span class="fa fa-download"></span>
             @Html.ActionLink("Export to Excel", "Export", "Home", new { searchString = ViewBag.searchString, eventType = ViewBag.eventType, isExport = true })
         </div>
-
     }
     if (ViewBag.currentPage == 0 || ViewBag.currentPage == null)
     {
@@ -88,17 +130,17 @@
                         sortOrder = "desc";
                     }
                 }
-                <a class="sort-link" data-sortOrder="@sortOrder" data-sortField="eventTimestamp" data-currentpage="@ViewBag.currentPage">@Html.DisplayNameFor(model => model.eventTimestamp)</a>
+                <a class="sort-link" data-sortOrder="@sortOrder" data-sortField="eventTimestamp" data-datatype="amount" data-currentpage="@ViewBag.currentPage">@Html.DisplayNameFor(model => model.eventTimestamp)<span class="fa fa-sort-amount-asc sort-icon"></span></a>
             </th>
             <th>
-                <a class="sort-link" data-sortOrder="@sortOrder" data-sortField="response" data-currentpage="@ViewBag.currentPage">@Html.DisplayNameFor(model => model.response)</a>
-            </th>
+                <a class="sort-link" data-sortOrder="@sortOrder" data-sortField="response" data-datatype="string" data-currentpage="@ViewBag.currentPage">@Html.DisplayNameFor(model => model.response)<span class="fa fa-sort-alpha-asc sort-icon"></span></a>
+</th>
             <th>
-                <a class="sort-link" data-sortOrder="@sortOrder" data-sortField="@@event" data-currentpage="@ViewBag.currentPage">@Html.DisplayNameFor(model => model.@event)</a>
-            </th>
+                <a class="sort-link" data-sortOrder="@sortOrder" data-sortField="@@event" data-datatype="string" data-currentpage="@ViewBag.currentPage">@Html.DisplayNameFor(model => model.@event)<span class="fa fa-sort-alpha-asc sort-icon"></span></a>
+</th>
             <th>
-                <a class="sort-link" data-sortOrder="@sortOrder" data-sortField="email" data-currentpage="@ViewBag.currentPage">@Html.DisplayNameFor(model => model.email)</a>
-            </th>
+                <a class="sort-link" data-sortOrder="@sortOrder" data-sortField="email" data-datatype="string" data-currentpage="@ViewBag.currentPage">@Html.DisplayNameFor(model => model.email)<span class="fa fa-sort-alpha-asc sort-icon"></span></a>
+</th>
             <th class="email-info">
                 Info
             </th>

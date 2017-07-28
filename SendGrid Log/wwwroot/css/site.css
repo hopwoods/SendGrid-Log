@@ -95,6 +95,11 @@ table.table {
         cursor: pointer;
     }
 
+        table.table thead th a span.sort-icon {
+            margin-left: 0.3em;
+            display: inline-block;
+        }
+
     table.table tr:nth-of-type(odd) {
         background-color: #efefef;
     }
