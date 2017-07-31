@@ -30,10 +30,8 @@ namespace SendGrid_Log.Models
         public IQueryable<EmailEvent> GetEvents(EventSearch searchModel)
         {
             //Build DB Query
-
             //Basic Select Query
-            var events = _context.EmailEvent.AsQueryable();       
-            
+            var events = _context.EmailEvent.AsQueryable();    
             //Set number of events to retrieve. Either post value from the search form or a default.
             if (searchModel.showRecords == 0)
             {
@@ -75,9 +73,9 @@ namespace SendGrid_Log.Models
                         break;
                 };
             }
+
             //Get total records before pagination
             searchModel.totalRecords = events.Count();
-
             if (searchModel.sortOrder == null)
             {
                 searchModel.sortOrder = "desc";

@@ -4,68 +4,139 @@
 }
 <script type="text/javascript">
     $(document).ready(function () {
-    $("#searchString").change(function () {
-        $("#hdnSearchString").val($(this).val());
-    });
-    $("#searchString").keypress(function (e) {
-        if (e.which == 13) {
-            $("#hdnSearchString").val($(this).val());
+        $("#searchString").val($("#hdnSearchString").val());
+        $("#searchString").change(function () {
+            var val = $(this).val();
+            if (val == null) {
+                val == "";
+            }
+            $("#hdnSearchString").val(val);
+        });
+        $("#selectSearchField").keypress(function (e) {
+            if (e.which == 13) {
+                $("#hdnSearchString").val($(this).val());
+                $("form#Search").submit();
+            };
+        });
+        var searchField = "@ViewBag.searchField";
+        $("#selectSearchField > option").each(function () {
+            if ($(this).val() == searchField) {
+                $(this).attr("selected", "selected");
+            }
+        });
+        var eventType = "@ViewBag.eventType";
+        $("#selectEventType > option").each(function () {
+            if ($(this).val() == eventType) {
+                $(this).attr("selected", "selected");
+            }
+        });
+        $("#selectShowRecords").change(function () {
+            $("#hdnShowRecords").val($(this).val());
             $("form#Search").submit();
-        };
-    });
-    $("#selectShowRecords").change(function () {
-        $("#hdnShowRecords").val($(this).val());
-        $("form#Search").submit();
-    });
-    $("#selectEventType").change(function () {
-        $("#hdnEventType").val($(this).val());
-    });
-    $("#PrimarySubmit").click(function () {
-        $("form#Search").submit();
-    });
+        });
+        $("#selectEventType").change(function () {
+            $("#hdnEventType").val($(this).val());
+        });
+        $("#PrimarySubmit").click(function () {
+            $("form#Search").submit();
+        });
+        var showRecords = @ViewBag.showRecords;
+        $("#selectShowRecords > option").each(function () {
+            if ($(this).val() == showRecords) {
+                $(this).attr("selected", "selected");
+            }
+        });
+        $(".page-link").click(function (e) {
+            e.preventDefault();
+            var searchstring = $(this).data("searchstring");
+            var showrecords = $(this).data("showrecords");
+            var eventtype = $(this).data("eventtype");
+            var currentpage = $(this).data("currentpage");
 
-    var showRecords = @ViewBag.showRecords;
-    $("#selectShowRecords > option").each(function () {
-        if ($(this).val() == showRecords) {
-            $(this).attr("selected", "selected");
-        }
-    });
-    $(".page-link").click(function (e) {
-        e.preventDefault();
-        var searchstring = $(this).data("searchstring");
-        var showrecords = $(this).data("showrecords");
-        var eventtype = $(this).data("eventtype");
-        var currentpage = $(this).data("currentpage");
+            $("#hdnSearchString").val(searchstring);
+            $("#hdnShowRecords").val(showrecords);
+            $("#hdnEventType").val(eventtype);
+            $("#hdnCurrentPage").val(currentpage);
+            $("form#Search").submit();
+        });
+        $(".sort-link").click(function (e) {
+            e.preventDefault();
+            var sortOrder = $(this).data("sortorder");
+            var sortField = $(this).data("sortfield");
+            var currentPage = $(this).data("currentpage");
+            $("#hdnSortOrder").val(sortOrder);
+            $("#hdnSortField").val(sortField);
+            $("#hdnCurrentPage").val(currentPage);
+            console.log(sortOrder);
+            console.log(sortField);
+            console.log(currentPage);
+            $("form#Search").submit();
+        });
+        $(".sort-link").each(function () {
+            var sortOrder = $(this).data("sortorder");
+            var dataType = $(this).data("datatype");
+            var currentSortField = $("#hdnSortField").val();
+            var field = $(this).data("sortfield");
 
-        $("#hdnSearchString").val(searchstring);
-        $("#hdnShowRecords").val(showrecords);
-        $("#hdnEventType").val(eventtype);
-        $("#hdnCurrentPage").val(currentpage);
-        $("form#Search").submit();
+            console.log(currentSortField);
+            console.log(field);
+            console.log(sortOrder);
+            console.log(dataType);
+
+            $(this).children("span.sort-icon").removeClass("fa-sort-alpha-asc");
+            $(this).children("span.sort-icon").removeClass("fa-sort-alpha-desc");
+            $(this).children("span.sort-icon").removeClass("fa-sort-amount-asc");
+            $(this).children("span.sort-icon").removeClass("fa-sort-amount-desc");
+
+            if (currentSortField == field) {
+                if (dataType == "amount") {
+                    switch (sortOrder) {
+                        default:
+                            $(this).children("span.sort-icon").addClass("fa-sort-amount-asc");
+                            break;
+                        case "asc":
+                            $(this).children("span.sort-icon").addClass("fa-sort-amount-asc");
+                            break;
+                        case "desc":
+                            $(this).children("span.sort-icon").addClass("fa-sort-amount-desc");
+                            break;
+                    }
+                } else if (dataType == "string") {
+                    switch (sortOrder) {
+                        default:
+                            $(this).children("span.sort-icon").addClass("fa-sort-alpha-asc");
+                            break;
+                        case "asc":
+                            $(this).children("span.sort-icon").addClass("fa-sort-alpha-asc");
+                            break;
+                        case "desc":
+                            $(this).children("span.sort-icon").addClass("fa-sort-alpha-desc");
+                            break;
+                    }
+                }
+            }
+        });
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
     });
-    $(".sort-link").click(function (e) {
-        e.preventDefault();
-        var sortOrder = $(this).data("sortorder");
-        var sortField = $(this).data("sortfield");
-        $("#hdnSortOrder").val(sortOrder);
-        $("#hdnSortField").val(sortField);
-        console.log(sortOrder);
-        console.log(sortField);
-        $("form#Search").submit();
-    });
-});
 </script>
 <h2>ITS SendGrid Email Log</h2>
 <br />
 
 @Html.Partial("_SearchForm", new SendGrid_Log.Models.EventSearch())
-@if (Model.Count() > 0)
-{
-    <div class="export">
-        <span class="fa fa-download"></span>
-        @Html.ActionLink("Export to Excel", "Export", "Home", new { searchString = ViewBag.searchString, eventType = ViewBag.eventType, isExport = true })
-    </div>
-
+@{
+    if (Model.Count() > 0)
+    {
+        <div class="export">
+            <span class="fa fa-download"></span>
+            @Html.ActionLink("Export to Excel", "Export", "Home", new { searchString = ViewBag.searchString, eventType = ViewBag.eventType, isExport = true })
+        </div>
+    }
+    if (ViewBag.currentPage == 0 || ViewBag.currentPage == null)
+    {
+        ViewBag.currentPage = 1;
+    }
 }
 <table class="table">
     <thead>
@@ -78,16 +149,16 @@
                         sortOrder = "desc";
                     }
                 }
-                <a href="" class="sort-link" data-sortOrder="@sortOrder" data-sortField="eventTimestamp" data-currentPage="@ViewBag.cuurentPage">@Html.DisplayNameFor(model => model.eventTimestamp)</a>
+                <a class="sort-link" data-sortOrder="@sortOrder" data-sortField="eventTimestamp" data-datatype="amount" data-currentpage="@ViewBag.currentPage">@Html.DisplayNameFor(model => model.eventTimestamp)<span class="fa fa-sort-amount-asc sort-icon"></span></a>
             </th>
             <th>
-                <a href="" class="sort-link" data-sortOrder="@sortOrder" data-sortField="response" data-currentPage="@ViewBag.cuurentPage">@Html.DisplayNameFor(model => model.response)</a>
+                <a class="sort-link" data-sortOrder="@sortOrder" data-sortField="response" data-datatype="string" data-currentpage="@ViewBag.currentPage">@Html.DisplayNameFor(model => model.response)<span class="fa fa-sort-alpha-asc sort-icon"></span></a>
             </th>
             <th>
-                <a href="" class="sort-link" data-sortOrder="@sortOrder" data-sortField="@@event" data-currentPage="@ViewBag.cuurentPage">@Html.DisplayNameFor(model => model.@event)</a>
+                <a class="sort-link" data-sortOrder="@sortOrder" data-sortField="@@event" data-datatype="string" data-currentpage="@ViewBag.currentPage">@Html.DisplayNameFor(model => model.@event)<span class="fa fa-sort-alpha-asc sort-icon"></span></a>
             </th>
             <th>
-                <a href="" class="sort-link" data-sortOrder="@sortOrder" data-sortField="email" data-currentPage="@ViewBag.cuurentPage">@Html.DisplayNameFor(model => model.email)</a>
+                <a class="sort-link" data-sortOrder="@sortOrder" data-sortField="email" data-datatype="string" data-currentpage="@ViewBag.currentPage">@Html.DisplayNameFor(model => model.email)<span class="fa fa-sort-alpha-asc sort-icon"></span></a>
             </th>
             <th class="email-info">
                 Info
@@ -99,6 +170,7 @@
         {
             @foreach (var item in Model)
             {
+                var URL = Html.Raw(item.url);
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.eventTimestamp)
@@ -113,7 +185,7 @@
                         @Html.DisplayFor(modelItem => item.email)
                     </td>
                     <td class="email-info">
-                        <span class="fa fa-info-circle"></span>
+                        <span class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" data-html="true" title="<b>@Html.DisplayNameFor(model => model.reason)</b> @Html.DisplayFor(modelItem => item.reason)<br /><b>@Html.DisplayNameFor(model => model.response)</b> @Html.DisplayFor(modelItem => item.response)<br /><b>@Html.DisplayNameFor(model => model.url)</b> @Html.Encode(URL)<br /><b>@Html.DisplayNameFor(model => model.@event)</b> @Html.DisplayFor(modelItem => item.@event)<br /><b>@Html.DisplayNameFor(model => model.ip)</b> @Html.DisplayFor(modelItem => item.ip)<br /><b>@Html.DisplayNameFor(model => model.tls)</b> @Html.DisplayFor(modelItem => item.tls)<br /><b>@Html.DisplayNameFor(model => model.cert_err)</b> @Html.DisplayFor(modelItem => item.cert_err)<br /><b>@Html.DisplayNameFor(model => model.useragent)</b> @Html.DisplayFor(modelItem => item.useragent)<br /><b>@Html.DisplayNameFor(model => model.userid)</b> @Html.DisplayFor(modelItem => item.userid)<br /><b>@Html.DisplayNameFor(model => model.type)</b> @Html.DisplayFor(modelItem => item.type)<br /><b>@Html.DisplayNameFor(model => model.attempt)</b> @Html.DisplayFor(modelItem => item.attempt)<br /><b>@Html.DisplayNameFor(model => model.eventSend_at)</b> @Html.DisplayFor(modelItem => item.eventSend_at)"></span>
                     </td>
                 </tr>
             }
@@ -133,10 +205,6 @@
                         @{
                             int noOfPages = ViewBag.totalRecords / ViewBag.showRecords;
                             int c = 1;
-                            if (ViewBag.currentPage == 0 || ViewBag.currentPage == null)
-                            {
-                                ViewBag.currentPage = 1;
-                            }
                             while (c <= (noOfPages + 1))
                             {
                                 if (ViewBag.currentPage == c)
