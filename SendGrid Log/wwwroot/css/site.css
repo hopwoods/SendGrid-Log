@@ -130,6 +130,8 @@ table.table {
         color: #333333;
         font-weight: bold;
     }
+
+
     /* Search Form */
     #adv-search {
         width: 300px;
@@ -219,10 +221,26 @@ button.dropdown-toggle {
     margin-bottom: 0.4em;
 }
 
-/* Footer */
-footer {
-    color: #666;
+/* Tooltips */
+.tooltip.right .tooltip-arrow {
+    border-right-color: #222 !important;
 }
+.tooltip-inner {
+    background-color: #222 !important;
+    max-width: 500px !important;
+    text-align: left !important;
+}
+    .tooltip-inner b {
+        color: #feee98;
+        width: 75px;
+        display: inline-block;
+    }
+
+
+    /* Footer */
+    footer {
+        color: #666;
+    }
 
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
