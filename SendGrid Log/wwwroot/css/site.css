@@ -183,12 +183,24 @@ button.dropdown-toggle {
     width: 351px;
     position: absolute;
     left: -278px;
-    padding: 5px;
+    padding: 15px;
 }
+    #searchmenu .form-group{
+        width: 100%;
 
-    #searchmenu label, #searchmenu select, #searchmenu button, #searchmenu input {
+    } 
+    #searchmenu label, #searchmenu select, #searchmenu input {
         display: block !important;
-        border-radius: 2px;
+        width: 100%;
+        max-width: none;
+    }
+    #searchmenu option:checked {
+        padding: 6px 12px;
+        font-weight: bold;
+    }
+    #searchmenu button {
+        border-radius: 5px;
+        padding: 6px 12px;
     }
 
 #clearForm {

@@ -79,7 +79,7 @@ namespace SendGrid_Log.Controllers
 
             string sWebRootFolder = _hostingEnvironment.WebRootPath;
             DateTime datetime = System.DateTime.Now;
-            string sFileName = @"Email-Events " + datetime.ToString("dd-MM-yy hhmmss") + ".xlsx";
+            string sFileName = @"Email-Events.xlsx";
             string URL = string.Format("{0}://{1}/{2}", Request.Scheme, Request.Host, sFileName);
             FileInfo file = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
             if (file.Exists)
@@ -96,6 +96,15 @@ namespace SendGrid_Log.Controllers
                 worksheet.Cells[1, 2].Value = "Response";
                 worksheet.Cells[1, 3].Value = "Event Type";
                 worksheet.Cells[1, 4].Value = "Email Address";
+                worksheet.Cells[1, 5].Value = "Reason";
+                worksheet.Cells[1, 6].Value = "URL";
+                worksheet.Cells[1, 7].Value = "IP Address";
+                worksheet.Cells[1, 8].Value = "TLS Version";
+                worksheet.Cells[1, 9].Value = "Cert Error";
+                worksheet.Cells[1, 10].Value = "User Agent";
+                worksheet.Cells[1, 11].Value = "User ID";
+                worksheet.Cells[1, 12].Value = "Attempt Number";
+                worksheet.Cells[1, 13].Value = "Sent At";
 
                 //Add values
                 var i = 2;
@@ -106,6 +115,16 @@ namespace SendGrid_Log.Controllers
                     worksheet.Cells["B" + i.ToString()].Value = item.response;
                     worksheet.Cells["C" + i.ToString()].Value = item.@event;                    
                     worksheet.Cells["D" + i.ToString()].Value = item.email;
+                    worksheet.Cells["E" + i.ToString()].Value = item.reason;
+                    worksheet.Cells["F" + i.ToString()].Value = item.url;
+                    worksheet.Cells["G" + i.ToString()].Value = item.ip;
+                    worksheet.Cells["H" + i.ToString()].Value = item.tls;
+                    worksheet.Cells["I" + i.ToString()].Value = item.cert_err;
+                    worksheet.Cells["J" + i.ToString()].Value = item.useragent;
+                    worksheet.Cells["K" + i.ToString()].Value = item.userid;
+                    worksheet.Cells["L" + i.ToString()].Value = item.attempt;
+                    worksheet.Cells["M" + i.ToString()].Value = item.eventSend_at;
+                    worksheet.Cells["M" + i.ToString()].Style.Numberformat.Format = "dd-mm-yyyy hh:MM:ss";
                     i++;
                 }
                 package.Save(); //Save the workbook.
