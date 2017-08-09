@@ -111,7 +111,7 @@ namespace SendGrid_Log.Models
             {
                 if (_send_at == Convert.ToDateTime("01/01/1970 00:00:00"))
                 {
-                    _send_at = _send_at.AddSeconds(timestamp).ToLocalTime();
+                    _send_at = _send_at.AddSeconds(send_at).ToLocalTime();
                     return _send_at;
                 }
                 else
@@ -123,7 +123,7 @@ namespace SendGrid_Log.Models
             {
                 if (_send_at == Convert.ToDateTime("01/01/0001 00:00:00"))
                 {
-                    _send_at = _send_at.AddSeconds(timestamp).ToLocalTime();
+                    _send_at = _send_at.AddSeconds(send_at).ToLocalTime();
                 }
                 else
                 {
